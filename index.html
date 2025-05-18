@@ -155,7 +155,7 @@
     汇付天下 提供技术支持
 </div>
 
-<script>
+<!--<script>
     document.getElementById('payButton').addEventListener('click', function() {
         onBridgeReady();
     });
@@ -188,6 +188,83 @@
             document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
             document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
         }
+    }
+</script>-->
+<script>
+    // 1. 支付按钮点击事件（唯一触发点）
+    document.getElementById('payButton').addEventListener('click', function() {
+        // 先检查是否在微信环境
+        if (!isWeixinBrowser()) {
+            alert('请在微信客户端中打开页面完成支付');
+            return;
+        }
+
+        // 确认微信JSBridge已加载
+        if (typeof WeixinJSBridge === "undefined") {
+            registerWeixinBridgeEvent(); // 注册微信JSBridge监听
+        } else {
+            executeWechatPay(); // 直接执行支付
+        }
+    });
+
+    // 2. 判断是否微信浏览器
+    function isWeixinBrowser() {
+        return /MicroMessenger/i.test(navigator.userAgent);
+    }
+
+    // 3. 注册微信JSBridge监听（延迟加载时使用）
+    function registerWeixinBridgeEvent() {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', executeWechatPay, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', executeWechatPay);
+            document.attachEvent('onWeixinJSBridgeReady', executeWechatPay);
+        }
+
+        // 5秒超时检测
+        setTimeout(function() {
+            if (typeof WeixinJSBridge === "undefined") {
+                alert('微信支付初始化失败，请刷新页面重试');
+            }
+        }, 5000);
+    }
+
+    // 4. 核心支付函数（仅在用户点击后执行）
+    function executeWechatPay() {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            {
+                "appId": "wx85785e2db08b86a8",
+                "timeStamp": "1747577968",
+                "nonceStr": "c8283bb876f848019c89fc3f29c5e83f",
+                "package": "prepay_id=wx1822192806108188127598ca1ca2a20000",
+                "signType": "RSA",
+                "paySign": "j4HE319NEmjqXjmbAngsmB8yHUQKF7okY6zjdaV8uL04wzVU1HI5F5vEcjpq34ql/fATvp2ziA/W2LLNNd52h0IiQp2jOJ9Goax0uVcQ30k7nkZLGP/O+KB62QbC7K7CKnMHFSvO7T17FfC+f01HXDTRGTsHpATVziRgpPy2PgZu5OIkc10yxtdUM/eL3PBL3k76sXAjt6g/+JfE7c/UJRRCHH0aVeRQlGPDbYAExbmUeNllu50iwd6tk7DLsMC7m20FwmY4cBIvW1p/ojdar7gjHM0JEyULP2gnj7/HjMz3FbApWULB8QuMzmrAxYAtp0HxrdwB7DmofNDbmfwD/g=="
+            },
+            function(res) {
+                // 支付结果处理（根据截图中的金额0.02元显示对应提示）
+                if (res.err_msg === "get_brand_wcpay_request:ok") {
+                    alert('支付成功（金额：¥0.02）');
+                    // 实际项目中这里应该跳转到成功页面
+                } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+                    alert('您已取消支付');
+                } else {
+                    alert('支付失败: ' + res.err_msg);
+                }
+            }
+        );
+    }
+
+    // 5. 页面加载时只初始化必要元素（不触发支付）
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化倒计时（根据截图中04:36的样式）
+        startCountdown('04:36');
+    });
+
+    // 6. 倒计时函数（模拟截图中的倒计时效果）
+    function startCountdown(time) {
+        // 这里可以添加真实的倒计时逻辑
+        console.log('支付倒计时初始化: ' + time);
     }
 </script>
 </body>
