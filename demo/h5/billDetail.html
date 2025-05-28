@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>账单</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <script>
+    (function (WIN) {
+      var setFontSize = (WIN.setFontSize = function (_width) {
+        var docEl = document.documentElement;
+        // 获取当前窗口的宽度
+        var width = _width || docEl.clientWidth || docEl.getBoundingClientRect().width;
+
+        if (width > 420) {
+          width = 420;
+        }
+        // 在375px上，1rem = 20px
+        var rem = width / 18.75;
+
+        docEl.style.fontSize = rem + 'px';
+
+        // // 部分机型上的误差、兼容性处理
+        var actualSize =
+          WIN.getComputedStyle && parseFloat(WIN.getComputedStyle(docEl)['font-size']);
+        if (actualSize !== rem && actualSize > 0 && Math.abs(actualSize - rem) > 1) {
+          var remScaled = (rem * rem) / actualSize;
+          docEl.style.fontSize = rem + 'px';
+        }
+      });
+      var timer;
+      //函数节流
+      function dbcRefresh() {
+        clearTimeout(timer);
+        timer = setTimeout(setFontSize, 100);
+      }
+
+      //窗口更新动态改变 font-size
+      WIN.addEventListener('resize', dbcRefresh, false);
+      //页面显示时计算一次
+      WIN.addEventListener(
+        'pageshow',
+        function (e) {
+          if (e.persisted) {
+            dbcRefresh();
+          }
+        },
+        false
+      );
+      setFontSize();
+    })(window);
+
+  </script>
+  <style>
+    @media only screen and (min-width: 400px) {
+      body {
+        font-size: 21.33333333px !important;
+      }
+    }
+
+    @media only screen and (min-width: 414px) {
+      body {
+        font-size: 21px !important;
+      }
+    }
+
+    @media only screen and (min-width: 480px) {
+      body {
+        font-size: 25.6px !important;
+      }
+    }
+
+    body,
+    html {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+      font-size: 20px;
+    }
+
+    .h5Container {
+      width: 18.75rem;
+      margin: 0 auto;
+      max-width: 18.75rem;
+      height: 100vh;
+      text-align: center;
+      box-sizing: border-box;
+      font-size: 0.7rem;
+      box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+      position: relative;
+      background: url('../img/bill_bg.jpg') no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .btn {
+      width: 17.55rem;
+      height: 3.6rem;
+      background: url('../img/bill_btn.png') no-repeat;
+      background-size: 100% 100%;
+      position: absolute;
+      bottom: 1.8rem;
+      left: .6rem;
+    }
+
+  </style>
+</head>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+
+<body>
+  <script language="javascript" type="text/javascript">
+      function gotoPay() {
+        var price = 0.01;
+        var origin = location.origin;
+        var pathname = location.pathname;
+        var urlAry = pathname.split('/');
+        urlAry.pop();
+        urlAry.push('billCashier.html');
+        let urlStr = urlAry.join('/');
+        location.href = origin + '' + urlStr + '?price=' + price + '&pageShowType=' + 'fullScreen';
+      }
+
+
+  </script>
+
+  <div class="h5Container">
+    <div class="btn" onclick="gotoPay()"></div>
+  </div>
+</body>
+
+</html>
+

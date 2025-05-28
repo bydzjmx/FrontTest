@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>跳转中</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="./util.js"></script>
+  </head>
+  <script>
+    var reqSeqId = GetQueryString('reqSeqId');
+    var price = GetQueryString('price');
+
+    // 跳转 scheme 链接
+    setTimeout(function () {
+      skipWeixinScheme(reqSeqId, price);
+    }, 1000);
+
+    // 可视监听
+    window.addEventListener('visibilitychange', function () {
+      wx.closeWindow();
+      window.close();
+    });
+
+    function GetQueryString(name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return decodeURI(r[2]);
+      return null;
+    }
+  </script>
+</html>

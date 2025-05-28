@@ -1,0 +1,137 @@
+/*eslint-disable*/
+// 获取URL中参数值
+function GetQueryString(name) {
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) return decodeURI(r[2]);
+  return null;
+}
+function deepClone(source) {
+  if (!source && typeof source !== 'object') {
+    throw new Error('error arguments', 'deepClone');
+  }
+  const targetObj = source.constructor === Array ? [] : {};
+  Object.keys(source).forEach((keys) => {
+    if (source[keys] && typeof source[keys] === 'object') {
+      targetObj[keys] = deepClone(source[keys]);
+    } else {
+      targetObj[keys] = source[keys];
+    }
+  });
+  return targetObj;
+}
+
+// 微信授权
+function weixinAuth() {
+  let urlNow = encodeURIComponent(window.location.href);
+  let scope = 'snsapi_base'; //snsapi_userinfo   //静默授权 用户无感知
+  let appid = configObj.mobile.wxConfig.appid;
+  let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${urlNow}&response_type=code&scope=${scope}&state=STATE&connect_redirect=1#wechat_redirect`;
+  window.location.replace(url);
+}
+// 银联授权
+function unionAuth() {
+  let urlNow = encodeURIComponent(window.location.href);
+  let url = 'https://qr.95516.com/qrcGtwWeb-web/api/userAuth?version=1.0.0&redirectUrl=' + urlNow;
+  window.location.replace(url);
+}
+var isInWeiXinApp = window.navigator.userAgent.toLowerCase().search(/MicroMessenger/i) > -1;
+var isInAliPayApp = window.navigator.userAgent.toLowerCase().search(/AlipayClient/i) > -1;
+var isInUnionApp = window.navigator.userAgent.toLowerCase().search(/CloudPay/i) > -1;
+//生成自定义位数随机数
+function randomNum(minNum, maxNum) {
+  switch (arguments.length) {
+    case 1:
+      return parseInt(Math.random() * minNum + 1);
+    case 2:
+      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum);
+    default:
+      return 0;
+  }
+}
+// 支付状态
+var mods = {};
+// 支付渠道
+// alipay_wap: 支付宝H5支付
+// wx_pub: 微信H5支付
+mods.channelConfig = {
+  alipay_qr: 'alipay_qr',
+  alipay_wap: 'alipay_wap',
+  wx_pub: 'wx_pub',
+};
+
+// payment参数校验结果
+mods.chackMsg = {
+  orderError: '发起支付失败',
+  channelError: '支付渠道参数错误',
+  amountError: '支付金额参数错误',
+  queryUrlError: '支付结果url参数未知',
+};
+
+// 支付状态值
+mods.payStatus = {
+  succeeded: 'succeeded',
+  failed: 'failed',
+  pending: 'pending',
+  timeout: 'timeout',
+  cancel: 'unknown',
+  unknown: 'unknown',
+  paramError: 'paramError',
+};
+// 支付结果对象
+mods.payResult = {
+  succeeded: {
+    result_status: mods.payStatus.succeeded,
+    result_message: '订单支付成功',
+    result_info: {},
+  },
+
+  failed: {
+    result_status: mods.payStatus.failed,
+    result_message: '订单支付失败',
+    result_info: {},
+  },
+
+  pending: {
+    result_status: mods.payStatus.pending,
+    result_message: '订单支付中',
+    result_info: {},
+  },
+
+  timeout: {
+    result_status: mods.payStatus.timeout,
+    result_message: '订单支付超时',
+    result_info: {},
+  },
+
+  cancel: {
+    result_status: mods.payStatus.cancel,
+    result_message: '支付取消',
+    result_info: {},
+  },
+
+  unknown: {
+    result_status: mods.payStatus.unknown,
+    result_message: '订单结果未知',
+    result_info: {},
+  },
+
+  paramError: {
+    result_status: mods.payStatus.paramError,
+    result_message: '参数错误',
+    result_info: {},
+  },
+};
+
+/**
+ * 跳转微信小程序 scheme 链接
+ * @param {*} productId
+ * @param {*} productId
+ */
+function skipWeixinScheme(reqSeqId, price) {
+  var env_version = 'release';
+  var queryString = `productId=4&type=4&reqSeqId=${reqSeqId}&price=${price}`;
+  window.location.href = `weixin://dl/business/?appid=wx852a790f103175fe&path=pages/cashier/index&query=${encodeURIComponent(
+    queryString
+  )}&env_version=${env_version}`;
+}

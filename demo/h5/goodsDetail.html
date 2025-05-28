@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>商品列表</title>
+  </head>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #F6F9FF;
+    }
+
+    .itemContent {
+      display: flex;
+      background: #FFFFFF;
+      border-radius: 1.6vw;
+      display: none;
+      margin: 2.67vw 3.2vw;
+    }
+
+    .leftContent {
+      width: 31.6vw;
+      height: 31.6vw;
+    }
+
+    .rightContent {
+      margin-left: 3.98vw;
+    }
+
+    .goodsTitle {
+      font-weight: 500;
+      font-size: 3.73vw;
+      color: #1D2129;
+      letter-spacing: 0;
+      margin-top: 2.67vw;
+    }
+
+    .goodsTag {
+      width: 8vw;
+      background: #FFFFFF;
+      border: 0.13vw solid #D1D1D1;
+      border-radius: 0.53vw;
+      color: #666666;
+      font-weight: 400;
+      font-size: 2.93vw;
+      text-align: center;
+      margin-top: 2.13vw;
+    }
+
+    .goodsPrice {
+      color: #1d2129;
+      font-weight: 700;
+      line-height: 5.87vw;
+      margin-top: 6.4vw;
+    }
+
+    .goodsPriceTag {
+      font-size: 2.93vw;
+      letter-spacing: 0.03vw;
+      text-align: left;
+    }
+
+    .goodsPriceNumber {
+      font-size: 4.8vw;
+      letter-spacing: 0.05vw;
+      text-align: left;
+    }
+
+    .goodsTag2 {
+      display: flex;
+      align-items: center;
+      margin-top: 2.13vw;
+    }
+
+    .goodsTag2Title {
+      background: #FA2C19;
+      font-size: 2.93vw;
+      color: #fff;
+      border-radius: 0.53vw 0 0 0.53vw;
+      text-align: center;
+      padding: 1.06vw;
+    }
+
+    .goodsTag2Desc {
+      background: #FEEAE8;
+      border-radius: 0 0.53vw 0.53vw 0;
+      text-align: center;
+      font-weight: 400;
+      font-size: 2.93vw;
+      color: #FA2C19;
+      padding: 1.06vw;
+    }
+
+  </style>
+  <script src="./util.js"></script>
+  <script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+
+  <body>
+    <div class="content">
+      <div class="itemContent itemContent1">
+        <img class="leftContent" src="../img/mouse.png"></img>
+        <div class="rightContent">
+          <div class="goodsTitle">静音无声笔记本无线鼠标</div>
+          <div class="goodsTag">包邮</div>
+          <div class="goodsPrice">
+            <span class="goodsPriceTag">¥</span>
+            <span class="goodsPriceNumber">0.02</span>
+          </div>
+        </div>
+      </div>
+      <div class="itemContent itemContent2" data-goods-type="2">
+        <img class="leftContent" src="../img/cup.png"></img>
+        <div class="rightContent">
+          <div class="goodsTitle">精致陶瓷大容量马克杯</div>
+          <div class="goodsTag2">
+            <span class="goodsTag2Title">白条</span>
+            <span class="goodsTag2Desc">白条分期</span>
+          </div>
+          <div class="goodsPrice">
+            <span class="goodsPriceTag">¥</span>
+            <span class="goodsPriceNumber">10.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script language="javascript" type="text/javascript">
+  var type = GetQueryString('type');
+  var isPayHost = type === '2';
+  var itemContent1Ele = $('.itemContent1');
+  var itemContent2Ele = $('.itemContent2');
+
+  // 支付托管
+  if (isPayHost) {
+    itemContent1Ele.css('display', 'flex');
+    itemContent2Ele.remove();
+  } else {
+    // 其他情况
+    itemContent1Ele.css('display', 'flex');
+    itemContent2Ele.css('display', 'flex');
+  }
+
+  $('.itemContent').click(function () {
+    var url = 'goodsDetailNew.html';
+    var goodsType = this.getAttribute('data-goods-type');
+
+    // 支付托管
+    if (isPayHost) {
+      url = url + '?type=2';
+    }
+
+    // 京东分期跳转
+    if (goodsType === '2') {
+      url = isPayHost ? url + '&goodsType=2' : url + '?goodsType=2'
+    }
+    
+    skipGoodsDtail(url);
+  });
+
+  function skipGoodsDtail(name) {
+    var origin = location.origin;
+    var pathname = location.pathname;
+    var urlAry = pathname.split('/');
+    urlAry.pop();
+    urlAry.push(name);
+    let urlStr = urlAry.join('/');
+    location.href = urlStr;
+  }
+
+  function GetQueryString(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
+  }
+</script>

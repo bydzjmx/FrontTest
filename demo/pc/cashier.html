@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>斗拱收银台</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+  </head>
+  <style>
+    body,
+    html {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+    }
+    .pcContainer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      /* max-width: 1280px; */
+      height: 100%;
+      /* max-height: 880px; */
+      position: relative;
+      text-align: center;
+      /* border-radius: 4px; */
+      /* box-shadow: 0px 12px 48px 16px rgba(0, 0, 0, 0.03), 0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+        0px 6px 16px -8px rgba(0, 0, 0, 0.08); */
+      box-sizing: border-box;
+      font-size: 14px;
+      overflow: scroll;
+    }
+
+    .m20 {
+      margin-bottom: 20px;
+    }
+
+    .pcHeader {
+      padding-left: 120px;
+      padding-top: 35px;
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 64px;
+      padding-bottom: 23px;
+      border-bottom: #ecedf0 1px solid;
+      position: relative;
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+    /* 产品接入说明 */
+    .tipView {
+      color: #0d6eff;
+      font-size: 14px;
+      position: absolute;
+      right: 120px;
+      font-family: MicrosoftYaHei;
+    }
+
+    .tipView:hover {
+      color: #40b9ff !important;
+    }
+
+    .productDescBtn {
+      cursor: pointer;
+    }
+
+    .logoImg {
+      object-fit: contain;
+      height: 40px;
+      margin-right: 24px;
+      max-width: 163px;
+    }
+
+    .pcHeaderTitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: #1d2129;
+    }
+
+    .headerTitle {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1d2129;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .price {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 21px;
+      font-family: DINAlternate, DINAlternate-Bold;
+      color: #333333;
+    }
+
+    .priceUnit {
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .priceNumber {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .payTimeRemaining {
+      margin-bottom: 16px;
+    }
+
+    .payTimeRemainningHidden {
+      visibility: hidden;
+    }
+
+    .payTxt {
+      color: #999;
+      margin-right: 11px;
+    }
+
+    .time {
+      font-weight: 400;
+      font-size: 14px;
+      color: #000000;
+      display: inline-flex;
+    }
+
+    .timeItem {
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+      padding: 2px;
+      width: 20px;
+    }
+
+    .timeSplit {
+      margin: 0 4px;
+    }
+
+    .order {
+      color: #999999;
+      margin-bottom: 54px;
+    }
+
+    .orderTxt {
+      margin-right: 4px;
+    }
+
+    .payTab {
+      display: flex;
+      min-width: 710px;
+      justify-content: center;
+      margin-bottom: 64px;
+      border-bottom: 0.1px solid #e9e6e6;
+      display: none;
+    }
+
+    .payItem:hover {
+      color: #0d6eff !important;
+    }
+
+    .payItem {
+      padding: 18px;
+      background: #ffffff;
+      font-size: 14px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      box-sizing: border-box;
+      width: 160px;
+    }
+
+    .payItem:last-of-type {
+      margin-right: 0;
+    }
+
+    .payIcon {
+      height: 20px;
+      object-fit: contain;
+      margin-right: 10px;
+    }
+
+    .activePayItem {
+      border-radius: 6px 6px 0px 0px;
+      border: 0.1px solid #e9e6e6;
+      border-bottom: none;
+    }
+
+    .payItem.recommend-type::after {
+      position: absolute;
+      content: '推荐';
+      right: 28px;
+      top: -8px;
+      width: 36px;
+      height: 22px;
+      text-align: center;
+      line-height: 22px;
+      border-radius: 10px 0 10px 0;
+      background: var(--theme);
+      color: #ffffff;
+      z-index: 999;
+    }
+
+    .activePayItem::before {
+      position: absolute;
+      content: '';
+      right: 0;
+      bottom: -1px;
+      width: 100%;
+      height: 3px;
+      background: #ffffff;
+      z-index: 999;
+    }
+
+    .payContent {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .QRImg {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 20px;
+    }
+
+    .conetentTxt {
+      text-align: center;
+      font-weight: 400;
+      color: #000000;
+      margin-bottom: 55px;
+    }
+
+    #remarks {
+      margin-top: 5px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 24px;
+      cursor: pointer;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .brandImg {
+      height: 20px;
+      margin-right: 16px;
+      object-fit: contain;
+      max-width: 90px;
+    }
+
+    .brandtxt {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+    .hide {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+    /* 取消支付 */
+    .cancelMask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .cancelMask .dialog {
+      position: absolute;
+      width: 440px;
+      background: #ffffff;
+      border-radius: 5px;
+      display: flex;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .cancelMask .dialog .header {
+      width: 100%;
+      font-size: 18px;
+      line-height: 24px;
+      color: #22242e;
+      display: flex;
+    }
+
+    .cancelMask .dialog img {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+    }
+
+    .cancelMask .dialog .content {
+      width: 100%;
+      font-size: 14px;
+      color: rgba(29, 33, 41, 0.4);
+      padding: 8px 0 24px;
+      display: flex;
+      text-align: justify;
+    }
+
+    .cancelMask .dialog .content p {
+      margin-left: 36px;
+    }
+
+    .cancelMask .dialog .dialogFooter {
+      width: 100%;
+      display: flex;
+      justify-content: right;
+    }
+
+    .cancelMask .dialog .btn {
+      background: #0d6eff;
+      border-radius: 4px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #ffffff;
+      width: 100px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirmDialog {
+      position: absolute;
+      width: 446px;
+      background: #ffffff;
+      border-radius: 5px;
+      display: flex;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .close {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      background: url('../img/close.png') no-repeat;
+      background-size: 13px 13px;
+      background-position: left bottom;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .confirmHeader {
+      width: 100%;
+      font-size: 18px;
+      line-height: 24px;
+      color: #22242e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confimContent {
+      width: 100%;
+      font-size: 16px;
+      line-height: 21px;
+      color: #6c6e75;
+      padding: 10px 0 30px;
+      display: flex;
+      justify-content: center;
+      text-align: justify;
+    }
+
+    .contentTxt {
+      line-height: 21px;
+    }
+
+    .confimFooter {
+      display: flex;
+      align-items: center;
+      position: relative;
+      justify-content: center;
+    }
+
+    .confimBtn {
+      width: 100px;
+      height: 36px;
+      font-size: 14px;
+      line-height: 19px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orderBtn {
+      border: 1px solid var(--theme);
+      color: var(--theme);
+      margin-right: 20px;
+    }
+    .orderBtn:hover {
+      background-color: var(--theme);
+      color: #ffffff;
+      opacity: 0.4;
+    }
+    .payBtn {
+      color: #fff;
+      background: var(--theme);
+    }
+    .payBtn:hover {
+      opacity: 0.8;
+    }
+    /* 超时提醒 */
+    .timeoutRemindMask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+    .timeoutRemindMask .confirmDialog {
+      position: absolute;
+      width: 446px;
+      background: #ffffff;
+      border-radius: 5px;
+      display: flex;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 56px 15px 51px;
+    }
+    .timeoutRemindMask .close {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      background: url('../img/close.png') no-repeat;
+      background-size: 13px 13px;
+      background-position: left bottom;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    .timeoutRemindMask .confirmHeader {
+      width: 100%;
+      font-size: 18px;
+      line-height: 24px;
+      color: #22242e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timeoutRemindMask .confimContent {
+      width: 100%;
+      font-size: 16px;
+      line-height: 21px;
+      color: #6c6e75;
+      padding: 10px 0 0;
+      display: flex;
+      justify-content: center;
+      text-align: justify;
+    }
+    .timeoutRemindMask .contentTxt {
+      line-height: 21px;
+      padding: 10px 30px 30px;
+    }
+    .timeoutRemindMask .confimFooter {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      position: relative;
+      justify-content: center;
+    }
+    .timeoutRemindMask .confimBtn {
+      width: 100px;
+      height: 36px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 36px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .timeoutRemindMask .orderBtn {
+      border: 1px solid var(--theme);
+      color: var(--theme);
+      margin-right: 24px;
+    }
+    .timeoutRemindMask .payBtn {
+      color: #fff;
+      background: var(--theme);
+    }
+    .timeoutRemindMask .payBtn:hover {
+      opacity: 0.8;
+    }
+
+    /* 快捷支付显示内容 */
+    .quickPayContent {
+      display: none;
+    }
+    .quickView {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
+    }
+    .sure-pay-btn {
+      width: 363px;
+      line-height: 44px;
+      background-color: #0d6eff;
+      color: white;
+      margin-top: 48px;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .sure-pay-btn:hover {
+      background-color: #40b9ff !important;
+    }
+
+    /* 快捷支付 */
+    .phoneInput {
+      width: 343px;
+      height: 40px;
+      border: 1px solid #e5e6eb;
+      border-radius: 2px;
+      padding-left: 12px;
+    }
+
+    /* 输入框设置提示字体颜色 */
+    .phoneInput::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .phoneInput:hover {
+      border: 1px solid #0d6eff;
+    }
+
+    .phoneInput:focus {
+      border: 1px solid #0d6eff;
+      outline: none;
+    }
+    .phoneInput::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    .codeView {
+      width: 343px;
+      height: 40px;
+      border: 1px solid rgba(229, 230, 235, 1);
+      padding-left: 18px;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .codeInput {
+      border: none;
+      width: calc(100% - 116px);
+      height: 40px;
+    }
+    .codeInput:focus {
+      outline: none;
+    }
+    .codeInput::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    .sendCodeBtn {
+      cursor: pointer;
+      color: #0d6eff;
+      margin-right: 16px;
+      text-align: right;
+      width: 116px;
+    }
+    /* 网银支付显示内容 */
+    .netBankContent {
+      display: none;
+    }
+    .netBankView {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .netbank-action-view {
+      display: flex;
+      flex-direction: row;
+    }
+    /* .netbank-pay-btn {
+      width: 172px;
+      height: 180px;
+      background: #F7FAFE;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    } */
+
+    .netbank-view-div:hover {
+      color: #0d6eff;
+    }
+
+    .netbank-view-div {
+      width: 400px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .netbank-pay-btn {
+      width: 300px;
+      height: 138px;
+      background-image: url('../img/netbank_company_icon.png');
+      background-size: 100% 100%;
+      cursor: pointer;
+      transition: all 100ms linear;
+    }
+
+    .netbank-pay-btn:hover {
+      transform: scale(1.02);
+      transition: all 100ms linear;
+    }
+
+    .person-pay-btn:hover {
+      transform: scale(1.02);
+      transition: all 100ms linear;
+    }
+
+    .person-pay-btn {
+      width: 300px;
+      height: 138px;
+      background-image: url('../img/person_company_icon.png');
+      background-size: 100% 100%;
+      cursor: pointer;
+      transition: all 100ms linear;
+    }
+    .netbank-remark-label {
+      margin-top: 10px;
+      height: 14px;
+    }
+    .netbankIcon {
+      width: 50px;
+      height: 50px;
+    }
+    .netbankLabel {
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 18px;
+      color: #000000;
+      margin-top: 32px;
+    }
+    @media screen and (max-width: 767px) {
+      .pcHeader {
+        padding-left: 120px;
+        padding-top: 35px;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 64px;
+        padding-bottom: 23px;
+        border-bottom: #ecedf0 1px solid;
+        position: relative;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      /* 产品接入说明 */
+      .tipView {
+        color: #0d6eff;
+        font-size: 14px;
+        position: absolute;
+        right: 10px;
+        font-family: MicrosoftYaHei;
+      }
+      .productDescBtn {
+        cursor: pointer;
+      }
+    }
+  </style>
+
+  <body>
+    <div class="pcContainer">
+      <div class="container">
+        <div class="pcHeader">
+          <img class="logoImg" src="../img/defaultLogo.png" alt="Logo" title="Logo" />
+          <div class="pcHeaderTitle">收银台</div>
+          <div class="tipView">
+            <div class="productDescBtn" id="productDescBtn" onClick="gotoProductDesc()"></div>
+          </div>
+        </div>
+        <div class="price">
+          <span class="priceUnit">¥</span>
+          <span class="priceNumber" id="cashier_priceNumber">---</span>
+        </div>
+        <div class="payTimeRemaining payTimeRemainningHidden" id="payTimeRemaining">
+          <span class="payTxt">支付剩余时间</span>
+          <span class="time">
+            <div class="timeItem" id="pay_minute">05</div>
+            <span class="timeSplit">:</span>
+            <div class="timeItem" id="pay_second">00</div>
+          </span>
+        </div>
+        <div class="order">
+          <span class="orderTxt">订单编号:</span>
+          <span id="orderNumber" class="orderNumber">---</span>
+        </div>
+        <div class="payType">
+          <ul class="payTab payMent" id="payTab">
+            <li class="payItem " data-type="wxpay" style="--theme: #e41937">
+              <img class="payIcon" src="../img/new_wx_pay.png" />
+              <span class="payTitle">微信</span>
+            </li>
+            <li class="payItem activePayItem recommend-type" data-type="alipay" style="--theme: #e41937">
+              <img class="payIcon" src="../img/zfb_pay.png" />
+              <span class="payTitle">支付宝</span>
+            </li>
+            <!-- <li
+              class="payItem"
+              data-type="unionpay"
+              style="--theme: #E41937"
+            >
+              <img class="payIcon" src="../img/union_pay.png" alt="" />
+              <span class="payTitle">银联</span>
+            </li> -->
+            <!--<li class="payItem" style="&#45;&#45;theme: #e41937" data-type="quickpasspay">
+              <img class="payIcon" src="../img/quickpass_pay.png" alt="" />
+              <span class="payTitle">银联支付</span>
+            </li>
+            <li class="payItem" style="&#45;&#45;theme: #e41937" data-type="datarmbpay">
+              <img class="payIcon" src="../img/datarmb_pay.png" alt="" />
+              <span class="payTitle">数字人民币</span>
+            </li>-->
+            <!-- 20220921 去掉花呗银行卡分期 -->
+            <!-- <li class="payItem" data-type="huabeipay" style="--theme: #e41937">
+              <img class="payIcon" src="../img/huabei.png" />
+              <span class="payTitle">花呗分期</span>
+            </li>
+            <li class="payItem" style="--theme: #e41937" data-type="bankpay">
+              <img class="payIcon" src="../img/bank_pay.png" alt="" />
+              <span class="payTitle">银行卡分期</span>
+            </li> -->
+            <!--<li class="payItem" style="&#45;&#45;theme: #e41937" data-type="quickPay">
+              <img class="payIcon" src="../img/quick_pay.png" alt="" />
+              <span class="payTitle">快捷</span>
+            </li>
+            <li class="payItem" style="&#45;&#45;theme: #e41937" data-type="netBankpay">
+              <img class="payIcon" src="../img/net_bank_pay.png" alt="" />
+              <span class="payTitle">网银</span>
+            </li>-->
+          </ul>
+          <ul class="payTab installmentPay" id="payTab">
+            <li class="payItem activePayItem" data-type="jdbt" style="--theme: #e41937">
+              <img class="payIcon" src="../img/jd_baitiao_pay.svg" />
+              <span class="payTitle">白条分期</span>
+            </li>
+          </ul>
+          <div class="payContent">
+            <div class="QRImg" id="QRImg"></div>
+            <div class="conetentTxt">
+              <span class="payDesc"><span id="payName">使用微信App扫码完成支付</span></span>
+              <div id="remarks"></div>
+            </div>
+          </div>
+          <!-- 快捷支付页面显示内容 -->
+          <div class="quickPayContent">
+            <div class="quickView">
+              <div>
+                <input
+                  id="quickPayInput"
+                  placeholder="请输入手机号"
+                  type="number"
+                  class="phoneInput"
+                />
+                <!-- <div class="codeView">
+                  <input id="quickPayCodeInput" placeholder="请输入验证码" type="number" class="codeInput" />
+                  <div class="sendCodeBtn" id="sendCodeBtn">发送验证码</div>
+                </div> -->
+              </div>
+              <div class="sure-pay-btn" id="quickPayBtn">
+                支付
+                <!-- <div class="sure-pay-btn" id="quickBandCardBtn">快捷绑卡</div>
+                <div class="sure-pay-btn" id="quickPayBtn">快捷支付</div> -->
+              </div>
+
+              <!-- <div class="tipView" style="margin-top: 40px;">
+                <div class="productDescBtn" onClick="gotoProductDesc()">快捷支付接入指引</div>
+              </div> -->
+            </div>
+          </div>
+          <!-- 快捷支付页面显示内容 -->
+          <div class="netBankContent">
+            <div class="netBankView">
+              <div class="netbank-action-view">
+                <div class="netbank-view-div">
+                  <div class="person-pay-btn" id="netBankPersonBtn"></div>
+                  <div class="netbank-remark-label"></div>
+                </div>
+                <div class="netbank-view-div">
+                  <div class="netbank-pay-btn" id="netBankCompanyBtn"></div>
+                  <div class="netbank-remark-label">企业网银支付需额外支付10元手续费</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <div class="brand">
+            <img class="brandImg" src="../img/defaultLogo.png" alt="" />
+            <span class="brandtxt">提供技术支持</span>
+          </div>
+        </div>
+      </div>
+      <!-- 取消支付 -->
+      <div class="cancelMask hide" id="cancelMask">
+        <div class="confirmDialog">
+          <div class="close" onClick="reOrder()"></div>
+          <div class="confirmHeader">
+            <span class="headerTitle">确定离开收银台？</span>
+          </div>
+          <div class="confimContent">
+            <p class="contentTxt">订单尚未完成支付，请尽快支付。</p>
+          </div>
+          <div class="confimFooter">
+            <div
+              class="confimBtn orderBtn"
+              id="confirmLeaveBtn"
+              style="--theme: #e41937"
+              onClick="reOrder()"
+            >
+              确认离开
+            </div>
+            <div class="confimBtn payBtn" style="--theme: #e41937" id="continuePay">继续支付</div>
+          </div>
+        </div>
+      </div>
+      <!-- 超时提醒 -->
+      <div class="timeoutRemindMask hide" id="timeoutRemind">
+        <div class="content">
+          <div class="confirmDialog">
+            <div class="confirmHeader">
+              <span class="headerTitle">订单已取消</span>
+              <span id="closeTimeoutRemind" class="close" onClick="reOrder()"></span>
+            </div>
+            <div class="confimContent">
+              <p class="contentTxt">交易超时已关闭，请重新下单支付。</p>
+            </div>
+            <div class="confimFooter">
+              <div
+                id="continuePayBtn"
+                class="confimBtn payBtn"
+                style="--theme: #e41937"
+                onClick="reOrder()"
+              >
+                重新下单
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 弹出支付提醒窗口 -->
+      <div class="cancelMask hide" id="jumpPayMask">
+        <div class="dialog">
+          <div class="header">
+            <img src="../img/dialog_tips.png" />
+            <span class="headerTitle">请您在新打开的支付平台页面进行支付</span>
+          </div>
+          <div class="content">
+            <p class="contentTxt">支付完成前请不要关闭该窗口。</p>
+          </div>
+          <div class="dialogFooter">
+            <div class="btn" id="confirmLeaveBtn" onclick="reOrder()">我已支付</div>
+            <!-- <div class="confimBtn payBtn" style="--theme: #e41937" id="continuePay">继续支付</div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/axios/axios-0.21.1.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/dayjs/dayjs-1.10.4.min.js"></script>
+<script src="https://track-sdk-cdn.cloudpnr.com/web-tracksdk/1.0.8/monitorjs.browser.entry.min.js"></script>
+<!-- <script src="https://cdn.cloudpnr.com/opps/libs/qrcode/qrcode-1.0.0.min.js"></script> -->
+<script src="./qrcode.js"></script>
+<script src="./util.js"></script>
+<script src="../config/index.js"></script>
+<script src="../h5/http.js"></script>
+<!--<script type="text/javascript" src="../util/paySdk.min.js"></script>-->
+<script src="./pay.js"></script>
+<script>
+  // 埋点
+  HuifuMonitor.init({
+    pid: 'opps-checkout-web',
+    isDev: false,
+  });
+  HuifuMonitor.track(
+    '0090_00006404',
+    {
+      huifu_id:
+        location.host.indexOf(configObj.productionEnvHost) > -1
+          ? configObj.prod.huifuId
+          : configObj.test.huifuId,
+      os: 'pc',
+      page: 'full',
+    },
+    true
+  );
+  // 支付类型处理
+  var goodsType = GetQueryString('goodsType');
+  var payMentEle = $('.payMent');
+  var installmentPayEle = $('.installmentPay');
+
+  // 分期商品处理
+  if (goodsType === '2') {
+    payMentEle.hide().find('.payItem').removeClass('activePayItem');
+    installmentPayEle.css('display', 'flex');
+  } else {
+    // 其他情况
+    payMentEle.css('display', 'flex');
+    installmentPayEle.hide();
+  }
+
+  var totalPrice = GetQueryString('price');
+  $('#cashier_priceNumber').text(totalPrice);
+  $('#pay_amount').text(totalPrice);
+  window.addEventListener('load', () => {
+    const state = { title: 'init', url: '#' };
+    window.history.pushState(state, 'init', '#');
+  });
+  window.addEventListener('popstate', () => {
+    $('#cancelMask').show();
+  });
+  // 取消支付
+  // $('#confirmLeaveBtn').click(function () {
+  //   history.go(-1);
+  // });
+  $('#continuePay').click(function () {
+    $('#cancelMask').hide();
+  });
+</script>

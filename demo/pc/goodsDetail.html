@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品列表</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        color: #6c6e75;
+      }
+
+      .goodsContainer,
+      .logoBox {
+        width: 1140px;
+        margin: 0 auto;
+      }
+
+      .logoBox {
+        display: flex;
+        align-items: center;
+        padding: 24px 0;
+      }
+
+      .logoImg {
+        width: 50px;
+        height: 32px;
+        margin-right: 12px;
+      }
+
+      .logoTitle {
+        font-weight: 500;
+        font-size: 18px;
+        color: #000000;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+
+      .goodsTitle {
+        font-weight: 500;
+        font-size: 24px;
+        color: #000000;
+        letter-spacing: 0;
+        margin-top: 24px;
+      }
+
+      .goodsList {
+        display: flex;
+        align-items: center;
+        margin-top: 24px;
+      }
+
+      .goodsImg {
+        width: 363px;
+        height: 363px;
+      }
+
+      .goodsIntroduce {
+        text-align: center;
+      }
+
+      .goodsPrice {
+        color: #333333;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 0;
+        letter-spacing: 0.38px;
+      }
+
+      .goodsPrice span {
+        color: #333333;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 0;
+        letter-spacing: 0.24px;
+        padding-right: 2px;
+      }
+
+      .goodsName {
+        font-weight: 500;
+        font-size: 20px;
+        color: #000000;
+        letter-spacing: 0;
+        margin-top: 19px;
+      }
+
+      .goodsDesc {
+        font-weight: 400;
+        font-size: 16px;
+        color: #6C6E75;
+        letter-spacing: 0;
+        margin-top: 12px;
+      }
+
+      .goodsTag {
+        width: 31px;
+        border: 1px solid #D1D1D1;
+        border-radius: 2px;
+        font-weight: 400;
+        font-size: 12px;
+        color: #666666;
+        letter-spacing: 0.14px;
+        margin: 20px auto 0 auto;
+      }
+
+      .goodsTag2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .goodsTag2Title {
+        background: #FA2C19;
+        border-radius: 2px 0 0 2px;
+        color: #fff;
+        padding: 3px 3.5px;
+        font-size: 12px;
+      }
+
+      .goodsTag2Desc {
+        font-weight: 400;
+        font-size: 12px;
+        color: #FB442E;
+        text-align: center;
+        background: #FEEAE8;
+        border-radius: 0 2px 2px 0;
+        padding: 3px 4px;
+      }
+
+      .goodsBuyBtn {
+        width: 320px;
+        height: 50px;
+        border: 1px solid #0D6EFF;
+        border-radius: 3px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #0D6EFF;
+        letter-spacing: 0;
+        margin: 32px auto 0 auto;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+      }
+
+      .goodsBuyBtn:hover {
+        background: #0D6EFF;
+        color: #FFFFFF;
+      }
+
+      .payIconBox {
+        display: flex;
+        align-items: center;
+        margin-top: 34px;
+        margin-bottom: 48px;
+        justify-content: center;
+      }
+
+      .payIcon {
+        margin-right: 24px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .payIcon:hover .payIconTask {
+        display: block;
+      }
+
+      .payIcon img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .goodsItem {
+        margin-right: 29px;
+        position: relative;
+        transition: background-color 0.3s;
+      }
+
+      .goodsItem:hover {
+        border-radius: 8px;
+        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .goodsItem2 {
+        display: none;
+      }
+
+      .payIconTask {
+        width: 110px;
+        font-weight: 400;
+        font-size: 14px;
+        position: absolute;
+        left: -45px;
+        background: #006EFF;
+        color: #FFFFFF;
+        border-radius: 2px;
+        padding: 9px 0;
+        z-index: 10;
+        text-align: center;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .payIconTask::after {
+          content: "";
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent transparent #006EFF transparent;
+      }
+
+      .bottomLine {
+        border-bottom: 1px solid #DFE0E1;
+      }
+
+      .tipsText {
+        margin: 50px 0;
+        color: #fca163;
+        text-align: center;
+      }
+
+      .tipMask {
+        position: fixed;
+        left: 50%;
+        top: 5%;
+        transform: translateX(-50%);
+        width: 300px;
+        padding: 10px;
+        height: 30px;
+        line-height: 30px;
+        color: #e6a23c;
+        font-size: 16px;
+        text-align: center;
+        background-color: #fdf6ec;
+        border-color: #faecd8;
+        border-radius: 3px;
+        display: none;
+      }
+
+      .contain {
+        text-align: center;
+      }
+
+      .contain img {
+        display: inline-block;
+        margin: 120px 0 80px 0;
+        width: 280px;
+        height: 280px;
+      }
+
+      .contain h3 {
+        font-size: 32px;
+        letter-spacing: 1px;
+        color: #070a14;
+        font-weight: normal;
+        line-height: 50px;
+        padding-bottom: 14px;
+        padding-bottom: 120px;
+      }
+
+      .tips-404 {
+        color: #333 !important;
+      }
+
+      @media (max-width: 767px) {
+        body {
+          width: 100%;
+          min-width: auto;
+        }
+        .contain img {
+          width: 180px;
+          height: 180px;
+        }
+
+        .contain h3 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logoBox">
+      <img class="logoImg" src="../img/logo.svg" ></img>
+      <div class="logoTitle">上海汇涵信息技术公司</div>
+    </div>
+    <div class="bottomLine"></div>
+    <div class="goodsContainer">
+      <div class="goodsTitle">商品及服务</div>
+      <div class="goodsList">
+        <div class="goodsItem">
+          <img class="goodsImg" src="../img/mouse.png"></img>
+          <div class="goodsIntroduce">
+            <div class="goodsPrice">
+              <span>¥</span>0.02
+            </div>
+            <div class="goodsName">无线鼠标</div>
+            <div class="goodsDesc">金属触感、高灵敏度、作业流畅</div>
+            <div class="goodsTag">包邮</div>
+          </div>
+          <div class="goodsBuyBtn" id="goodsBuyBtn">立即购买</div>
+          <div class="payIconBox">
+            <div class="payIcon">
+              <img src="../img/wx_pay.png"></img>
+              <div class="payIconTask">支持微信支付</div>
+            </div>
+            <div class="payIcon">
+              <img src="../img/zfb_pay.png"></img>
+              <div class="payIconTask">支持支付宝</div>
+            </div>
+            <div class="payIcon">
+              <img src="../img/quickpass_pay.png"></img>
+              <div class="payIconTask">支持云闪付</div>
+            </div>
+            <div class="payIcon">
+              <img src="../img/datarmb_pay.png"></img>
+              <div class="payIconTask">支持数字人民币</div>
+            </div>
+            <div class="payIcon">
+              <img src="../img/quick_pay.png"></img>
+              <div class="payIconTask">支持快捷支付</div>
+            </div>
+            <div class="payIcon">
+              <img src="../img/net_bank_pay.png"></img>
+              <div class="payIconTask">支持网银支付</div>
+            </div>
+          </div>
+        </div>
+        <div class="goodsItem goodsItem2">
+          <img class="goodsImg" src="../img/cup.png"></img>
+          <div class="goodsIntroduce">
+            <div class="goodsPrice">
+              <span>¥</span>10.00
+            </div>
+            <div class="goodsName">马克杯</div>
+            <div class="goodsDesc">简约风、大容量、陶瓷</div>
+            <div class="goodsTag2">
+              <span class="goodsTag2Title">白条</span>
+              <span class="goodsTag2Desc">白条分期</span>
+            </div>
+          </div>
+          <div class="goodsBuyBtn" id="goods2BuyBtn">立即购买</div>
+          <div class="payIconBox">
+            <div class="payIcon">
+              <img src="../img/jd_baitiao_pay.svg"></img>
+              <div class="payIconTask">支持京东白条</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tipMask" id="tipMask"></div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script>
+  $(document).ready(function () {
+    if (
+      navigator.userAgent.match(
+        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+      )
+    ) {
+      let str = `<div class="contain"><img src="https://cdn.cloudpnr.com/hfwebsite/images/no-message.png" alt=""><h3>本页面包含互动体验内容，请您直接分享此链接至PC端打开。</h3></div>`;
+      $('body').html(str);
+    }
+  });
+  
+  var type = GetQueryString('type');
+  var goodsItem2Ele = $('.goodsItem2');
+  var isPayHost = type === '2';
+
+  // 支付托管处理
+  if (isPayHost) {
+    goodsItem2Ele.hide();
+  } else {
+    // 其他情况
+    goodsItem2Ele.show();
+  }
+
+  $('#goodsBuyBtn').click(function () {
+    var name = 'goodsDetailNew.html';
+    name = isPayHost ? name + '?type=2' : name;
+    skipGoodsDtail(name);
+  });
+
+  $('#goods2BuyBtn').click(function () {
+    skipGoodsDtail('goodsDetailNew.html?goodsType=2');
+  });
+
+  /**
+   * @description: 跳转详情
+   * @param {*} name 页面名称
+   * @return {*}
+   */
+  function skipGoodsDtail(name) {
+    var origin = location.origin;
+    var pathname = location.pathname;
+    var urlAry = pathname.split('/');
+    urlAry.pop();
+    urlAry.push(name);
+    let urlStr = urlAry.join('/');
+    location.href = urlStr;
+  }
+
+  /**
+   * @description: 获取url参数
+   * @param {*} name 参数名称
+   * @return {*}
+   */
+  function GetQueryString(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
+  }
+</script>

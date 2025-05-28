@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品详情</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        color: #6c6e75;
+      }
+      .goodsContainer {
+        width: 1140px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: none;
+      }
+      .goodsInfo {
+        display: flex;
+        color: #000000;
+      }
+      .goodsImg img {
+        margin-right: 52px;
+        width: 414px;
+        height: 490px;
+        user-select: none;
+      }
+
+      .goodsTitle {
+        font-size: 24px;
+        font-weight: 500;
+        color: #000000;
+      }
+      .goodsAttr {
+        color: #6c6e75;
+        margin-top: 20px;
+        margin-bottom: 30px;
+      }
+      .goodsPrice {
+        display: flex;
+        align-items: center;
+        padding: 32px 20px;
+        background-color: #f9fafb;
+        width: 672px;
+        box-sizing: border-box;
+      }
+      .priceTitle {
+        margin-right: 50px;
+      }
+      .priceReal {
+        color: #ff1e34;
+        margin-right: 11px;
+      }
+      .priceNumber {
+        font-size: 30px;
+        font-weight: 500;
+      }
+      .priceOrigin {
+        color: #999999;
+        margin-top: 10px;
+      }
+      .priceOriginNum {
+        text-decoration: line-through;
+      }
+      .goodInfoItem {
+        margin: 30px 0;
+        color: #000000;
+        display: flex;
+        align-items: center;
+      }
+      .goodInfoTitle {
+        margin-right: 50px;
+      }
+      .goodInfoItem:last-of-type {
+        margin-bottom: 0;
+      }
+      .calculateWrap {
+        display: flex;
+        align-items: center;
+        user-select: none;
+      }
+      .calculateItem {
+        width: 26px;
+        height: 26px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #dfe0e1;
+        border-radius: 1px;
+        line-height: 26px;
+      }
+      .calculateItemDisable {
+        color: #cccccc;
+      }
+      #calculateNum {
+        width: 54px;
+        height: 26px;
+        cursor: inherit;
+        border-left: none;
+        border-right: none;
+      }
+      .buyBtn {
+        width: 300px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        color: #fff;
+        background: #0b5afe;
+        border-radius: 3px;
+        user-select: none;
+        cursor: pointer;
+        transition: opacity linear 0.2s;
+      }
+      .buyBtn:hover {
+        opacity: 0.8;
+      }
+      .goodsTip {
+        margin-top: 60px;
+        border-top: 1px solid #dfe0e1;
+        padding-top: 40px;
+      }
+      .goodsTipImg {
+        width: 1140px;
+      }
+      .tipsText {
+        margin: 50px 0;
+        color: #fca163;
+        text-align: center;
+      }
+      .tipMask {
+        position: fixed;
+        left: 50%;
+        top: 5%;
+        transform: translateX(-50%);
+        width: 300px;
+        padding: 10px;
+        height: 30px;
+        line-height: 30px;
+        color: #e6a23c;
+        font-size: 16px;
+        text-align: center;
+        background-color: #fdf6ec;
+        border-color: #faecd8;
+        border-radius: 3px;
+        display: none;
+      }
+
+      .contain {
+        text-align: center;
+      }
+
+      .contain img {
+        display: inline-block;
+        margin: 120px 0 80px 0;
+        width: 280px;
+        height: 280px;
+      }
+
+      .contain h3 {
+        font-size: 32px;
+        letter-spacing: 1px;
+        color: #070a14;
+        font-weight: normal;
+        line-height: 50px;
+        padding-bottom: 14px;
+        padding-bottom: 120px;
+      }
+
+      .tips-404 {
+        color: #333 !important;
+      }
+
+      .goodsTag2 {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .goodsTag2Title {
+        background: #fa2c19;
+        border-radius: 2px 0 0 2px;
+        color: #fff;
+        padding: 3px 3.5px;
+        font-size: 12px;
+      }
+
+      .goodsTag2Desc {
+        font-weight: 400;
+        font-size: 12px;
+        color: #fb442e;
+        text-align: center;
+        background: #feeae8;
+        border-radius: 0 2px 2px 0;
+        padding: 3px 4px;
+      }
+
+      @media (max-width: 767px) {
+        body {
+          width: 100%;
+          min-width: auto;
+        }
+        .contain img {
+          width: 180px;
+          height: 180px;
+        }
+
+        .contain h3 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="goodsContainer goodsContainer1">
+      <div class="goodsInfo">
+        <div class="goodsImg">
+          <img src="../img/goods_img.png" alt="" />
+        </div>
+        <div class="goodsDesc">
+          <div class="goodsTitle">无线鼠标静音无声笔记本台式电脑游戏</div>
+          <div class="goodsAttr">金属触感、高灵敏度、作业流畅</div>
+          <div class="goodsPrice">
+            <span class="priceTitle">售价</span>
+            <span class="priceReal">
+              <span>¥</span>
+              <span class="priceNumber">0.02</span>
+            </span>
+            <span class="priceOrigin">
+              <span>¥</span>
+              <span class="priceOriginNum">234</span>
+            </span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">税费</span>
+            <span class="goodInfoDesc">售价已包含税费，无需另付税费</span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">配送</span>
+            <span class="goodInfoDesc">特快配送：7月23日-8月2日</span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">数量</span>
+            <div class="goodInfoDesc">
+              <ul class="calculateWrap">
+                <li id="decrease" class="calculateItem calculateItemDisable">-</li>
+                <li class="calculateItem" id="calculateNum">1</li>
+                <li id="increase" class="calculateItem">+</li>
+              </ul>
+            </div>
+          </div>
+          <div id="buyBtn" class="buyBtn">立即购买</div>
+        </div>
+      </div>
+      <div class="goodsTip">
+        <img class="goodsTipImg" src="../img/goods_tip.png" alt="" />
+      </div>
+      <div class="tipsText">本页面只用于演示收银台支付，不发货、不退款</div>
+    </div>
+    <div class="goodsContainer goodsContainer2">
+      <div class="goodsInfo">
+        <div class="goodsImg">
+          <img src="../img/goods_img2.png" alt="" />
+        </div>
+        <div class="goodsDesc">
+          <div class="goodsTitle">马克杯</div>
+          <div class="goodsAttr">简约风、大容量、陶瓷</div>
+          <div class="goodsPrice">
+            <span class="priceTitle">售价</span>
+            <span class="priceReal">
+              <span>¥</span>
+              <span class="priceNumber">10.00</span>
+            </span>
+            <span class="priceOrigin">
+              <span>¥</span>
+              <span class="priceOriginNum">139.000</span>
+            </span>
+          </div>
+          <div class="goodsTag2">
+            <span class="goodsTag2Title">白条</span>
+            <span class="goodsTag2Desc">白条分期</span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">税费</span>
+            <span class="goodInfoDesc">售价已包含税费，无需另付税费</span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">配送</span>
+            <span class="goodInfoDesc">特快配送：7月23日-8月2日</span>
+          </div>
+          <div class="goodInfoItem">
+            <span class="goodInfoTitle">数量</span>
+            <div class="goodInfoDesc">
+              <ul class="calculateWrap">
+                <li id="decrease" class="calculateItem calculateItemDisable">-</li>
+                <li class="calculateItem" id="calculateNum">1</li>
+                <li id="increase" class="calculateItem">+</li>
+              </ul>
+            </div>
+          </div>
+          <div id="buyBtn" class="buyBtn">立即购买</div>
+        </div>
+      </div>
+      <div class="goodsTip">
+        <img class="goodsTipImg" src="../img/goods2_tip.png" alt="" />
+      </div>
+    </div>
+    <div class="tipMask" id="tipMask"></div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script>
+  $(document).ready(function () {
+    if (
+      navigator.userAgent.match(
+        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+      )
+    ) {
+      let str = `<div class="contain"><img src="https://cdn.cloudpnr.com/hfwebsite/images/no-message.png" alt=""><h3>本页面包含互动体验内容，请您直接分享此链接至PC端打开。</h3></div>`;
+      $('body').html(str);
+    }
+
+    var goodsContainer1Ele = $('.goodsContainer1');
+    var goodsContainer2Ele = $('.goodsContainer2');
+    var goodsType = GetQueryString('goodsType');
+    // 分期商品处理
+    if (goodsType === '2') {
+      goodsContainer1Ele.remove();
+      goodsContainer2Ele.show();
+    } else {
+      // 其他处理
+      goodsContainer1Ele.show();
+      goodsContainer2Ele.remove();
+    }
+
+    var increaseEle = $('#increase');
+    var decreaseEle = $('#decrease');
+    var dcalculateEle = $('#calculateNum');
+    var increaseCount = 1;
+    var tipMask = $('#tipMask');
+    var timer = null;
+    increaseEle.click(function () {
+      if (timer) {
+        clearTimeout(timer);
+        tipMask.hide();
+      }
+      if (increaseCount == 1000) {
+        tipMask.show();
+        tipMask.text('数量最大为1000');
+        timer = setTimeout(function () {
+          tipMask.hide();
+        }, 3000);
+        return;
+      }
+      increaseCount += 1;
+      if (increaseCount > 1) {
+        decreaseEle.removeClass('calculateItemDisable');
+      }
+      dcalculateEle.text(increaseCount);
+    });
+    decreaseEle.click(function () {
+      if (timer) {
+        clearTimeout(timer);
+        tipMask.hide();
+      }
+      if (increaseCount == 2) {
+        decreaseEle.addClass('calculateItemDisable');
+      } else {
+        if (increaseCount == 1) {
+          tipMask.show();
+          tipMask.text('最小数量为1');
+          timer = setTimeout(function () {
+            tipMask.hide();
+          }, 3000);
+          return;
+        }
+        decreaseEle.removeClass('calculateItemDisable');
+      }
+      increaseCount -= 1;
+      dcalculateEle.text(increaseCount);
+    });
+    $('#buyBtn').click(function () {
+      var origin = location.origin;
+      var pathname = location.pathname;
+      var urlAry = pathname.split('/');
+      urlAry.pop();
+      urlAry.push('goodsOrder.html');
+      let urlStr = urlAry.join('/');
+      let url = GetQueryString('type')
+        ? origin + urlStr + '?count=' + increaseCount + '&type=2'
+        : origin + urlStr + '?count=' + increaseCount;
+      url = goodsType === '2' ? url + '&goodsType=' + goodsType : url;
+      location.href = url;
+    });
+  });
+  // 获取url参数
+  function GetQueryString(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
+  }
+</script>

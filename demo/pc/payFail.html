@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <title>支付结果</title>
+    <script>
+      (function (WIN) {
+        var setFontSize = (WIN.setFontSize = function (_width) {
+          var docEl = document.documentElement;
+          // 获取当前窗口的宽度
+          var width = _width || docEl.clientWidth || docEl.getBoundingClientRect().width;
+
+          if (width > 420) {
+            width = 420;
+          }
+          // 在375px上，1rem = 20px
+          var rem = width / 18.75;
+
+          docEl.style.fontSize = rem + 'px';
+
+          // // 部分机型上的误差、兼容性处理
+          var actualSize =
+            WIN.getComputedStyle && parseFloat(WIN.getComputedStyle(docEl)['font-size']);
+          if (actualSize !== rem && actualSize > 0 && Math.abs(actualSize - rem) > 1) {
+            var remScaled = (rem * rem) / actualSize;
+            docEl.style.fontSize = rem + 'px';
+          }
+        });
+        var timer;
+        //函数节流
+        function dbcRefresh() {
+          clearTimeout(timer);
+          timer = setTimeout(setFontSize, 100);
+        }
+
+        //窗口更新动态改变 font-size
+        WIN.addEventListener('resize', dbcRefresh, false);
+        //页面显示时计算一次
+        WIN.addEventListener(
+          'pageshow',
+          function (e) {
+            if (e.persisted) {
+              dbcRefresh();
+            }
+          },
+          false
+        );
+        setFontSize();
+      })(window);
+    </script>
+    <style>
+      @media only screen and (min-width: 400px) {
+        body {
+          font-size: 21.33333333px !important;
+        }
+      }
+
+      @media only screen and (min-width: 414px) {
+        body {
+          font-size: 21px !important;
+        }
+      }
+
+      @media only screen and (min-width: 480px) {
+        body {
+          font-size: 25.6px !important;
+        }
+      }
+
+      * {
+        padding: 0;
+        margin: 0;
+      }
+
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+        background: #ffffff;
+      }
+
+      .pcContainer {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1080px;
+        height: 100%;
+        max-height: 720px;
+        position: relative;
+        border-radius: 4px;
+        box-shadow: 0px 12px 48px 16px rgba(0, 0, 0, 0.03), 0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+          0px 6px 16px -8px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
+        font-size: 14px;
+      }
+
+      .mb16 {
+        margin-bottom: 40px;
+      }
+
+      .header {
+        padding-top: 40px;
+        margin-left: 24px;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+      }
+
+      .headerImg {
+        height: 30px;
+      }
+
+      .headerTitle {
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 10px;
+        height: 28px;
+        line-height: 28px;
+        color: rgba(0, 0, 0, 0.85);
+      }
+
+      .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .el-icon-close {
+        position: absolute;
+        left: 16px;
+        top: 60px;
+        width: 14px;
+        height: 14px;
+        opacity: 1;
+        color: rgba(0, 0, 0, 0.45);
+      }
+
+      .divider {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      .logo {
+        margin-bottom: 30px;
+        padding-top: 80px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logoImg {
+        object-fit: contain;
+        height: 48px;
+        margin-bottom: 20px;
+      }
+
+      .failTip {
+        height: 24px;
+        opacity: 1;
+        font-size: 16px;
+        font-family: PingFangSC, PingFangSC-Semibold;
+        font-weight: 600;
+        text-align: center;
+        color: #e74e4e;
+        line-height: 24px;
+      }
+
+      .failInfo {
+        opacity: 1;
+        font-size: 14px;
+        font-family: MicrosoftYaHei, MicrosoftYaHei-Regular;
+        font-weight: 400;
+        text-align: center;
+        color: #6c6e75;
+        letter-spacing: 1px;
+      }
+
+      .price {
+        color: #333333;
+        margin-bottom: 50px;
+      }
+
+      .priceNumber {
+        font-size: 24px;
+        font-weight: 700;
+        margin-left: 4px;
+        font-family: DINAlternate, DINAlternate-Bold;
+      }
+
+      .payTxt {
+        color: rgba(0, 0, 0, 0.65);
+        margin-right: 8px;
+      }
+
+      .time {
+        color: rgba(0, 0, 0, 0.65);
+        font-weight: 500;
+      }
+
+      .timeItem {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 2px;
+        padding: 2px;
+      }
+
+      .timeSplit {
+        margin: 0 4px;
+      }
+
+      .orderContent {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .reOrder {
+        width: 320px;
+        text-align: center;
+        font-size: 14px;
+        line-height: 40px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 1px solid var(--theme);
+        background: var(--theme);
+        color: #ffffff;
+        margin: 20px auto;
+        margin-top: 30px;
+      }
+
+      .order {
+        color: rgba(0, 0, 0, 0.65);
+        margin-bottom: 16px;
+        width: 320px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .orderTxt {
+        opacity: 1;
+        font-size: 14px;
+        font-family: MicrosoftYaHei, MicrosoftYaHei-Regular;
+        font-weight: 400;
+        text-align: right;
+        color: #22242e;
+      }
+
+      .orderTxt_l {
+        opacity: 1;
+        font-size: 14px;
+        font-family: MicrosoftYaHei, MicrosoftYaHei-Regular;
+        font-weight: 400;
+        text-align: left;
+        color: #6c6e75;
+      }
+
+      .payType {
+        text-align: left;
+        box-sizing: border-box;
+      }
+
+      .checkout-list-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        margin: 0 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        justify-content: space-between;
+      }
+
+      .checkout-list-item-inner {
+        display: flex;
+        align-items: center;
+      }
+
+      .checkout-payIcon {
+        margin-right: 16px;
+      }
+
+      .checkout-pay-title {
+        margin-right: 15px;
+      }
+
+      .checkout-recommend {
+        width: 40px;
+        height: 24px;
+        border: 1px solid var(--theme);
+        border-radius: 2px;
+        color: var(--theme);
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 24px;
+        text-align: center;
+      }
+
+      .checkout-list-item:last-of-type {
+        border-bottom: none;
+      }
+
+      .checkout-radio {
+        width: 16px;
+        height: 16px;
+        background-color: #ffffff;
+        border: solid 1px #dddddd;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        cursor: default;
+        -webkit-appearance: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-transition: background-color ease 0.1s;
+        transition: background-color ease 0.1s;
+      }
+
+      .checkout-radio:checked {
+        background-color: var(--theme);
+        border: solid 1px var(--theme);
+        text-align: center;
+        background-clip: padding-box;
+      }
+
+      .checkout-radio:checked:before,
+      .checkout-radio.checkout-checked:before,
+      .checkout-radio:checked:after,
+      .checkout-radio.checkout-checked:after {
+        content: '';
+        width: 8px;
+        height: 5px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -4px;
+        margin-top: -3px;
+        background: transparent;
+        border: 1px solid #ffffff;
+        border-top: none;
+        border-right: none;
+        z-index: 2;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+      }
+
+      .title {
+        font-weight: 500;
+        padding: 16px 0 16px 16px;
+      }
+
+      .payTxt {
+        margin: 0 16px;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 34px;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+      }
+
+      .brandImg {
+        height: 20px;
+        min-height: 16px;
+        object-fit: contain;
+        margin-right: 6px;
+      }
+
+      .brandtxt {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.45);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="pcContainer">
+      <div class="container">
+        <div class="header">
+          <img class="headerImg" src="../img/defaultBrandLogo.png" alt="" />
+          <div class="headerTitle">支付结果</div>
+        </div>
+        <div class="content">
+          <div class="logo">
+            <img class="logoImg" src="../img/fail1.png" alt="Logo" title="Logo" />
+            <div class="failTip">支付失败</div>
+          </div>
+          <div class="price">
+            <span>¥</span>
+            <span class="priceNumber" id="priceNumber">793.21</span>
+          </div>
+          <div class="orderContent">
+            <div class="order">
+              <span class="orderTxt_l">订单编号</span>
+              <span class="orderTxt" id="orderId">207084835060</span>
+            </div>
+          </div>
+          <div class="reOrder" onClick="toHome()" style="--theme: #0d6eff">重新下单</div>
+        </div>
+        <div class="footer">
+          <div class="brand">
+            <img
+              class="brandImg"
+              src="https://cdn.cloudpnr.com/hfwebsite/images/index-logo-color.svg"
+              alt=""
+            />
+            <span class="brandtxt">提供技术支持</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="https://track-sdk-cdn.cloudpnr.com/web-tracksdk/1.0.8/monitorjs.browser.entry.min.js"></script>
+<script src="../config/index.js"></script>
+<script src="./util.js"></script>
+<script>
+  // 埋点
+  HuifuMonitor.init({
+    pid: 'opps-checkout-web',
+    isDev: false,
+  });
+  function toHome() {
+    var backHomeUrl = configObj.pc.backHomeUrl;
+    location.href = backHomeUrl ? backHomeUrl : jumpLink('goodsDetail.html');
+  }
+  function jumpLink(urlName) {
+    const origin = location.origin;
+    const pathname = location.pathname;
+    const urlAry = pathname.split('/');
+    urlAry.pop();
+    urlAry.push(urlName);
+    const urlStr = urlAry.join('/');
+    const link = origin + urlStr;
+    return link;
+  }
+  window.addEventListener('load', () => {
+    const state = { title: 'init', url: '#' };
+    window.history.pushState(state, 'init', '#');
+  });
+  window.addEventListener('popstate', () => {
+    toHome();
+  });
+
+  $(function () {
+    var price = GetQueryString('price');
+    var mer_ord_id = localStorage.getItem('pc_mer_ord_id');
+    $('#priceNumber').text(price);
+    $('#orderId').text(mer_ord_id);
+  });
+</script>

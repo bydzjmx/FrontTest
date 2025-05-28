@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品订单</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+  </head>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      font-size: 16px;
+      font-weight: 400;
+      color: #6c6e75;
+    }
+    .goodsOrderContainer {
+      width: 1140px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .orderInfoWrap {
+      position: relative;
+      width: 1140px;
+      height: 610px;
+      background: url('../img/order_img.png') no-repeat 100% 100% / 1140px;
+      display: none;
+    }
+    .orderInfoWrap2 {
+      background: url('../img/order_img2.png') no-repeat 100% 100% / 1140px;
+    }
+    .orderInfo {
+      position: absolute;
+      bottom: 94px;
+      left: 194px;
+      display: flex;
+      align-items: center;
+    }
+    .goodsTitle {
+      width: 245px;
+      font-weight: 400;
+      color: #000000;
+    }
+    .goodColor,
+    .goodPrice {
+      color: #999999;
+    }
+    .goodColor {
+      margin-left: 70px;
+    }
+    .goodPrice {
+      margin-left: 110px;
+    }
+    .calculateWrap {
+      display: flex;
+      align-items: center;
+      margin-left: 80px;
+      user-select: none;
+    }
+    .calculateItem {
+      width: 26px;
+      height: 26px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid #dfe0e1;
+      border-radius: 1px;
+      line-height: 26px;
+    }
+    .calculateItemDisable {
+      color: #cccccc;
+    }
+    #calculateNum {
+      width: 54px;
+      height: 26px;
+      cursor: inherit;
+      border-left: none;
+      border-right: none;
+    }
+    .orderCount {
+      color: #000000;
+      font-weight: 600;
+      margin-left: 120px;
+    }
+    .orderFooter {
+      margin-top: 20px;
+      height: 258px;
+      border: 1px solid #dfe0e1;
+      border-radius: 2px;
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 20px 0;
+    }
+    .tip {
+      color: #6c6e75;
+      font-size: 14px;
+      width: 490px;
+    }
+    .tipTitle {
+      font-size: 16px;
+      color: #000000;
+      margin-bottom: 23px;
+    }
+    .tipItem {
+      margin-bottom: 10px;
+    }
+    .tipItem:last-of-type {
+      margin-bottom: 0;
+    }
+    .buyInfo {
+      text-align: right;
+    }
+    .priceNumberWrap {
+      color: #ff1e34;
+    }
+    .numberPrice {
+      font-size: 24px;
+      font-weight: 500;
+    }
+    .orderAddress {
+      color: #000000;
+      margin-top: 20px;
+    }
+    .submitOrderBtn {
+      width: 180px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      color: #fff;
+      background: #0b5afe;
+      border-radius: 3px;
+      user-select: none;
+      cursor: pointer;
+      transition: opacity linear 0.2s;
+      margin-top: 20px;
+      margin-left: auto;
+    }
+    .submitOrderBtn:hover {
+      opacity: 0.8;
+    }
+    .tipMask {
+      position: fixed;
+      left: 50%;
+      top: 5%;
+      transform: translateX(-50%);
+      width: 300px;
+      padding: 10px;
+      height: 30px;
+      line-height: 30px;
+      color: #e6a23c;
+      font-size: 16px;
+      text-align: center;
+      background-color: #fdf6ec;
+      border-color: #faecd8;
+      border-radius: 3px;
+      display: none;
+    }
+  </style>
+  <body>
+    <div class="goodsOrderContainer">
+      <div class="orderInfoWrap">
+        <div class="orderInfo">
+          <span class="goodsTitle"></span>
+          <span class="goodColor"></span>
+          <span class="goodPrice"></span>
+          <ul class="calculateWrap">
+            <li class="calculateItem calculateItemDisable" id="decrease">-</li>
+            <li class="calculateItem" id="calculateNum">1</li>
+            <li id="increase" class="calculateItem">+</li>
+          </ul>
+          <span class="orderCount" id="totalPrice">¥0.01</span>
+        </div>
+      </div>
+      <div class="orderFooter">
+        <div class="tip">
+          <div class="tipTitle">买家须知</div>
+          <div class="goodsTip">
+            <div class="tipItem">
+              鼠标出厂前会进行相关质量测试，产品底部脚垫的保护膜上会留下细微痕迹，首
+              次拆封后，移除保护膜即可正常使用。
+            </div>
+            <div class="tipItem">
+              适用于 Windows 7/8/10、Mac OS X 10.8 或更高版本、 Chrome OS 多种系统。
+            </div>
+            <div class="tipItem">内部实验室测算数据，电池使用寿命依用户及计算条件而异。</div>
+            <div class="tipItem">提交订单即表示同意买家须知。</div>
+          </div>
+          <div class="goods2Tip">
+            <div class="tipItem">
+              售卖商品只用于体验斗拱分期支付流程。不包括真是商品发货。提交订单即代表同意买家须知。
+            </div>
+          </div>
+        </div>
+        <div class="buyInfo">
+          <div class="priceNumberWrap">
+            实付款：¥
+            <span class="numberPrice" id="needPayPrice">0.01</span>
+          </div>
+          <div class="orderAddress">寄送至：广东省广州市花都区新华街新都大道68号馨庭花园</div>
+          <div class="orderAddress">收货人：李* 150****7659</div>
+          <div class="submitOrderBtn" id="submitOrderBtn">提交订单</div>
+        </div>
+      </div>
+      <div class="tipMask" id="tipMask"></div>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/axios/axios-0.21.1.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/dayjs/dayjs-1.10.4.min.js"></script>
+<script src="../config/index.js"></script>
+<script src="../h5/http.js"></script>
+<script>
+  function GetQueryString(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
+  }
+  function toDecimal2(val) {
+    let floatVal = parseFloat(val);
+    if (isNaN(floatVal)) {
+      return false;
+    }
+    let s = val.toString();
+    let rs = val.indexOf('.');
+    if (rs < 0) {
+      rs = s.length;
+      s += '.';
+    }
+    while (s.length <= rs + 2) {
+      s += '0';
+    }
+    return s;
+  }
+  $(document).ready(function () {
+    var isProdEnv = location.host.indexOf(configObj.productionEnvHost) > -1 ? true : false;
+    // 预下单
+    if (GetQueryString('type') && GetQueryString('type') === '2') {
+      $('#submitOrderBtn').text('托管支付');
+    }
+    var increaseEle = $('#increase');
+    var decreaseEle = $('#decrease');
+    var dcalculateEle = $('#calculateNum');
+    var totalPriceEle = $('#totalPrice');
+    var needPayPriceEle = $('#needPayPrice');
+    var tipMask = $('#tipMask');
+    var timer = null;
+    var goodsType = GetQueryString('goodsType');
+    var count = GetQueryString('count') ? Number(GetQueryString('count')) : 1;
+    dcalculateEle.text(count);
+    var totalPrice = goodsType === '2' ? 1000 : 2;
+    var calcTotalPrice = ((totalPrice * count) / 100).toFixed(2);
+    totalPriceEle.text(calcTotalPrice);
+    needPayPriceEle.text(calcTotalPrice);
+
+    // 商品信息替换
+    var goodsTitleEle = $('.goodsTitle');
+    var goodColorEle = $('.goodColor');
+    var goodPriceEle = $('.goodPrice');
+    var orderInfoWrapEle = $('.orderInfoWrap');
+    var goodsTipEle = $('.goodsTip');
+    var goods2TipEle = $('.goods2Tip');
+
+    // 商品2处理
+    if (goodsType === '2') {
+      goodsTitleEle.text('马克杯');
+      goodColorEle.text('彩色');
+      goodPriceEle.text('¥10.00');
+      orderInfoWrapEle.addClass('orderInfoWrap2').show();
+      goods2TipEle.show();
+      goodsTipEle.hide();
+    } else {
+      // 其他情况
+      goodsTitleEle.text('无线鼠标静音无声笔记本台式电脑');
+      goodColorEle.text('银色');
+      goodPriceEle.text('¥0.02');
+      orderInfoWrapEle.removeClass('orderInfoWrap2').show();
+      goods2TipEle.hide();
+      goodsTipEle.show();
+    }
+
+    increaseEle.click(function () {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      if (count == 1000) {
+        return;
+      }
+      count += 1;
+      if (count > 1) {
+        decreaseEle.removeClass('calculateItemDisable');
+      }
+      dcalculateEle.text(count);
+      var calcTotalPrice = ((totalPrice * count) / 100).toFixed(2);
+      totalPriceEle.text(calcTotalPrice);
+      needPayPriceEle.text(calcTotalPrice);
+    });
+    decreaseEle.click(function () {
+      if (count == 2) {
+        decreaseEle.addClass('calculateItemDisable');
+      } else {
+        if (count == 1) {
+          return;
+        }
+        decreaseEle.removeClass('calculateItemDisable');
+      }
+      count--;
+      dcalculateEle.text(count);
+      var calcTotalPrice = ((totalPrice * count) / 100).toFixed(2);
+      totalPriceEle.text(calcTotalPrice);
+      needPayPriceEle.text(calcTotalPrice);
+    });
+    $('#submitOrderBtn').click(function () {
+      // 支付托管
+      if (GetQueryString('type') && GetQueryString('type') === '2') {
+        var paymentcreateData = {
+          huifu_id: isProdEnv ? configObj.prod.huifuId : configObj.test.huifuId,
+          req_seq_id: new Date().getTime(),
+          hosting_order_id: '2023091400' + Math.floor(Math.random() * 900000 + 100000),
+          pre_order_type: '1',
+          trans_amt: toDecimal2(totalPriceEle.text()),
+          time_expire: '300',
+          goods_desc: '无线鼠标静音无声笔记本台式电脑',
+          hosting_data: {
+            project_title: 'DEMO演示-无模板',
+            project_id: 'PROJECTID2023092518673961',
+            callback_url:
+              location.href.split('/checkout')[0] + '/demo/pc/goodsDetail.html?type=2',
+          },
+        };
+        // 走预下单接口 返回字段 jump_url 直接跳转
+        service.post(configObj.preorder, paymentcreateData).then((res) => {
+          const { jump_url } = res.json_data;
+          if (jump_url) {
+            window.location.href = jump_url;
+          }
+        });
+      } else {
+        var origin = location.origin;
+        var pathname = location.pathname;
+        var urlAry = pathname.split('/');
+        urlAry.pop();
+        urlAry.push('cashier.html');
+        let urlStr = urlAry.join('/');
+        let toDecimalPrice = toDecimal2(totalPriceEle.text());
+        let url = origin + urlStr + '?price=' + toDecimalPrice;
+        url = goodsType === '2' ? url + '&goodsType=' + goodsType : url;
+        location.href = url;
+      }
+    });
+  });
+</script>

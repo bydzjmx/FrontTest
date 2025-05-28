@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>商品详情</title>
+</head>
+<style>
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #FFFFFF;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 129px;
+    display: none;
+  }
+
+  .itemContent {
+    display: flex;
+    justify-content: center;
+  }
+
+  .actImg {
+    width: 355px;
+    height: 290px;
+  }
+
+  .goodsTitle {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+  }
+
+  .cashier_price {
+    margin-top: 10px;
+    color: red;
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
+
+  .cashier_priceNumber {
+    font-size: 30px;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  .dliver {
+    width: 100%;
+    height: 10px;
+    background-color: #F7F8FA;
+  }
+
+  .orderContent {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 15px;
+  }
+
+  .orderLeft {
+    margin-left: 20px;
+    margin-right: 25px;
+    color: #818489;
+  }
+
+  .detail {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  .logo {
+    height: 100px;
+    width: 100px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+  }
+
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 18px;
+    color: #8f8f94;
+  }
+
+  .btnView {
+    width: 80%;
+    margin-top: 30px;
+    height: 33px;
+    display: flex;
+    line-height: 33px;
+    color: #366092;
+    justify-content: center;
+    border: #1296db solid 1px;
+    border-radius: 10px;
+  }
+
+  .cashier_footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 5px;
+    background-color: white;
+    /* cursor: pointer; */
+  }
+
+  .cashier_payBtn {
+    width: 343px;
+    height: 44px;
+    background: rgb(133, 133, 133);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 44px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+<script src="./util.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+
+<body>
+  <script language="javascript" type="text/javascript">
+    // 获取url参数
+    function GetQueryString(name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return decodeURI(r[2]);
+      return null;
+    }
+    function gotoOrder() {
+      var type = GetQueryString('type')
+      var goodsType = GetQueryString('goodsType');
+      let url = 'orderConfirm.html'
+      if (type) {
+        url = "orderConfirm.html?type=" + type
+      }
+      // 分期商品处理
+      if (goodsType === '2') {
+        var splitSymbol = type ? '&' : '?';
+        url = url + splitSymbol + 'goodsType=2';
+      }
+      window.location.href = url
+    }
+
+    $(function () {
+      $('#cashier_payBtn').css("background", isInWeiXinApp ? '#2BB915' : isInUnionApp ? '#EA4335' : "#0D6EFF");
+      var goodsType = GetQueryString('goodsType');
+      var content1Ele = $('.content1');
+      var content2Ele = $('.content2');
+
+      // 分期商品处理
+      if (goodsType === '2') {
+        content1Ele.hide();
+        content2Ele.css('display','flex');
+        $('#msgTip').text('本页面仅用于演示分期支付，交易完成后T+1日自动退款');
+      } else {
+        // 其他情况处理
+        content2Ele.hide();
+        content1Ele.css('display','flex');
+        $('#msgTip').text('本页面只用于演示收银台支付，不发货、不退款');
+      }
+    })
+  </script>
+  <div class="content content1">
+    <swiper style="height: 300px;display: flex;align-items: center;justify-content: center;">
+      <block>
+        <swiper-item class="itemContent"><img class="actImg" mode="aspectFill" src="../img/mouse.png"></img>
+        </swiper-item>
+      </block>
+    </swiper>
+    <div class="goodsTitle">静音无声笔记本无线鼠标</div>
+    <div class="cashier_price">
+      <span>¥</span>
+      <span class="cashier_priceNumber">0.02</span>
+    </div>
+    <div class="dliver"></div>
+    <div class="orderContent">
+      <div class="orderLeft">已选</div>
+      <div>银色</div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <div class="orderLeft">送至</div>
+      <div>上海 嘉定区</div>
+    </div>
+    <div class="dliver"></div>
+    <div class="detail">
+      按键采用竞技游戏级别的微动开发，零延迟，回弹利索，提高工作效能。<br />
+      高品质静音按键，轻松使用不扰人。
+    </div>
+    <div class="cashier_footer">
+      <div class="dliver"
+        style="text-align: center;height:45px ;font-size: 13px;color: #FCA163;align-items: center;display: flex;justify-content: center;margin-bottom: 15px;">
+        本页面只用于演示收银台支付，不发货、不退款
+      </div>
+      <div class="cashier_payBtn" id="cashier_payBtn" style="background: #0D6EFF" onclick="gotoOrder()">
+        立即购买
+      </div>
+    </div>
+  </div>
+  <div class="content content2">
+    <swiper style="height: 300px;display: flex;align-items: center;justify-content: center;">
+      <block>
+        <swiper-item class="itemContent"><img class="actImg" mode="aspectFill" src="../img/cup.png"></img>
+        </swiper-item>
+      </block>
+    </swiper>
+    <div class="goodsTitle">马克杯</div>
+    <div class="cashier_price">
+      <span>¥</span>
+      <span class="cashier_priceNumber">10.00</span>
+    </div>
+    <div class="dliver"></div>
+    <div class="orderContent">
+      <div class="orderLeft">已选</div>
+      <div>彩色</div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <div class="orderLeft">送至</div>
+      <div>上海 嘉定区</div>
+    </div>
+    <div class="dliver"></div>
+    <div class="detail">
+      精致陶瓷大容量马克杯
+    </div>
+    <div class="cashier_footer">
+      <div class="dliver"
+        id="msgTip"
+        style="text-align: center;height:45px ;font-size: 13px;color: #FCA163;align-items: center;display: flex;justify-content: center;margin-bottom: 15px;">
+        本页面只用于演示收银台支付，不发货、不退款
+      </div>
+      <div class="cashier_payBtn" id="cashier_payBtn" style="background: #0D6EFF" onclick="gotoOrder()">
+        立即购买
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
