@@ -1,0 +1,24 @@
+<!--
+ * @Author: huaze.fan
+ * @LastEditTime: 2022-10-18 17:50:33
+ * @LastEditors: huaze.fan
+ * @Description: 用来承接加载接口返回的收银台网页，比如快捷支付，网银支付
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汇付天下收银台</title>
+</head>
+<body>
+</body>
+</html>
+<script>
+window.onload = function () {
+    let htmlStr = localStorage.getItem("QUICK_PAGE_PAY_INFO")
+    document.write(htmlStr)
+    document.close()
+};
+</script>
