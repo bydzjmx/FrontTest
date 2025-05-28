@@ -173,7 +173,7 @@ function switchPaymentDisplay(payType) {
     } else if (payType === 'wxpay') {
       // 微信支付生成H5链接二维码
       const wxUrl = window.location.origin +
-        `/demo/h5/cashier.html?source=wx_pc&price=${amount}&goods_desc=${goods_desc}&mer_ord_id=${mer_ord_id}&pageShowType=fullScreen&trade_type=WX_H5_PAY#`;
+        `/FrontTest/demo/h5/cashier.html?source=wx_pc&price=${amount}&goods_desc=${goods_desc}&mer_ord_id=${mer_ord_id}&pageShowType=fullScreen&trade_type=WX_H5_PAY#`;
       qrCodeCache[tradeType] = wxUrl;
       qrCodeCache[payType] = wxUrl;
       makeQrCode(wxUrl);
