@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <title>斗拱收银台</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <script>
+      (function (WIN) {
+        var setFontSize = (WIN.setFontSize = function (_width) {
+          var docEl = document.documentElement;
+          // 获取当前窗口的宽度
+          var width = _width || docEl.clientWidth || docEl.getBoundingClientRect().width;
+
+          if (width > 420) {
+            width = 420;
+          }
+          // 在375px上，1rem = 20px
+          var rem = width / 18.75;
+
+          docEl.style.fontSize = rem + 'px';
+
+          // // 部分机型上的误差、兼容性处理
+          var actualSize =
+            WIN.getComputedStyle && parseFloat(WIN.getComputedStyle(docEl)['font-size']);
+          if (actualSize !== rem && actualSize > 0 && Math.abs(actualSize - rem) > 1) {
+            var remScaled = (rem * rem) / actualSize;
+            docEl.style.fontSize = rem + 'px';
+          }
+        });
+        var timer;
+        //函数节流
+        function dbcRefresh() {
+          clearTimeout(timer);
+          timer = setTimeout(setFontSize, 100);
+        }
+
+        //窗口更新动态改变 font-size
+        WIN.addEventListener('resize', dbcRefresh, false);
+        //页面显示时计算一次
+        WIN.addEventListener(
+          'pageshow',
+          function (e) {
+            if (e.persisted) {
+              dbcRefresh();
+            }
+          },
+          false
+        );
+        setFontSize();
+      })(window);
+    </script>
+    <style>
+      @media only screen and (min-width: 400px) {
+        body {
+          font-size: 21.33333333px !important;
+        }
+      }
+
+      @media only screen and (min-width: 414px) {
+        body {
+          font-size: 21px !important;
+        }
+      }
+
+      @media only screen and (min-width: 480px) {
+        body {
+          font-size: 25.6px !important;
+        }
+      }
+      body,html {
+        height: 100%;
+        width: 100%;
+        background: #ffffff;
+        font-size: 20px;
+      }
+
+      .h5Container {
+        width: 18.75rem;
+        margin: 0 auto;
+        max-width: 18.75rem;
+        height: 100vh;
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 0.7rem;
+        box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.07);
+        position: relative;
+      }
+      /* 独立页面样式 */
+      .cashier_headerTitle {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #050505;
+      }
+      .cashier_cashierDivider {
+        height: 0.5rem;
+        background: #f5f5f5;
+      }
+      .cashier_logo {
+        margin-bottom: 1rem;
+        padding-top: 1.85rem;
+      }
+      .cashier_logoImg {
+        object-fit: contain;
+        height: 2rem;
+      }
+      .cashier_price {
+        color: #333333;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+      .cashier_priceNumber {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+      .cashier_payTimeRemaining {
+        margin-bottom: 0.3rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;  
+      }
+      .cashier_payTxt {
+        color: #999999;
+        margin-right: 0.5rem;
+      }
+      .cashier_time {
+        /* color: #999999;
+        font-weight: 500; */
+        color: #999999;
+        font-weight: 500;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .cashier_timeItem {
+        /* background: rgba(0, 0, 0, 0.04);
+        border-radius: 0.1rem;
+        padding: 0.1rem;
+        color: #000000; */
+        border-radius: 2px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        background: #FFECE8;
+        border-radius: 2px;
+        font-size: 14px;
+        color: #F53F3F;
+      }
+      .cashier_timeSplit {
+        margin: 0 0.2rem;
+        color: #000000;
+      }
+      .cashier_order {
+        color: #999999;
+        margin-bottom: 1.5rem;
+      }
+      .cashier_orderTxt {
+        margin-right: 0.4rem;
+      }
+      .cashier_payType {
+        text-align: left;
+        box-sizing: border-box;
+        overflow: scroll;
+        height: calc(100vh - 200px);
+      }
+      .checkout-list-item {
+        height: 3rem;
+        padding: 0.9rem 0;
+        margin: 0 1rem;
+        border-bottom: 1px solid #e9eaeb;
+        overflow: hidden;
+        display: none;
+        box-sizing: border-box;
+      }
+      .item-content {
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+      .remarks {
+        font-size: .5rem;
+        color: #999999;
+        margin-left: 1.5rem;
+        pointer-events: none;
+      }
+      .checkout-list-item-inner {
+        display: flex;
+        align-items: center;
+        float: left;
+        pointer-events: none;
+      }
+      .checkout-payIcon {
+        margin-right: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+      }
+      .checkout-pay-title {
+        margin-right: 0.5rem;
+        font-size: 0.7rem;
+      }
+      .checkout-pay-tag {
+        background: #FCF2E6;
+        border-radius: 0.1rem;
+        font-weight: 400;
+        font-size: 0.55rem;
+        color: #E48239;
+        letter-spacing: 0;
+        padding: 0.03rem 0.3rem;
+      }
+      #jdbtItem {
+        height: 7.25rem;
+      }
+      .checkout-payinfo-item-box {
+       width: 100%;
+       height: 100%;
+        overflow-x: auto;
+      }
+      .checkout-payinfo-item-box::-webkit-scrollbar {
+        display: none;
+      }
+      .checkout-payinfo-item_wrap {
+        width: 18.75rem;
+        box-sizing: border-box;
+        position: relative;
+        top: 0.85rem;
+        display: flex;
+      }
+      .checkout-payinfo-wrap {
+        display: flex;
+        width: fit-content;
+        align-items: center;
+        flex-wrap: no-wrap;
+      }
+      .checkout-payinfo-item {
+        box-sizing: border-box;
+        width: 5.72rem;
+        background: #E8F3FF;
+        border-radius: 0.2rem;
+        padding: 0.55rem 0 0.05rem 0.6rem;
+        margin-right: 0.4rem;
+        border: 0.03rem solid #E8F3FF;
+      }
+      .checkout-payinfo-item-active {
+        border: 0.03rem solid #0D6EFF;
+      }
+      .payInfoTitle {
+        font-weight: 500;
+        font-size: 0.6rem;
+        color: #1d2129;
+        letter-spacing: 0;
+        line-height: 1rem;
+      }
+      .payInfoDesc {
+        font-weight: 400;
+        font-size: 0.55rem;
+        color: #1d2129;
+        letter-spacing: 0;
+        line-height: 0.95rem;
+      }
+      .selected-arrow-icon {
+        position: relative;
+        left: 4.5rem;
+        bottom: -0.26rem;
+        width: 0.6rem;
+        height: 0.5rem;
+        background: #0D6EFF;
+        border-radius: 0.2rem 0 0.2rem 0;
+        visibility: hidden;
+      }
+      .selected-arrow-icon-active {
+        visibility: visible;
+      }
+      .checkout-recommend {
+        width: 1.9rem;
+        height: 1rem;
+        border: 1px solid var(--theme);
+        border-radius: 0.15rem;
+        color: var(--theme);
+        font-weight: 400;
+        font-size: 0.7rem;
+        line-height: 1rem;
+        text-align: center;
+        display: none;
+      }
+      .checkout-list-item:nth-of-type(1) .checkout-recommend {
+        display: block;
+      }
+      .checkout-radio {
+        width: 1rem;
+        height: 1rem;
+        background-color: #ffffff;
+        border: 0.1rem solid #cccccc;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        display: block;
+        float: right;
+        /* vertical-align: top; */
+        cursor: default;
+        -webkit-appearance: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-transition: background-color ease 0.1s;
+        transition: background-color ease 0.1s;
+        pointer-events: none;
+      }
+      .checkout-radio:checked,
+      .checked-radio {
+        background-color: var(--theme);
+        border: solid 0.1rem var(--theme);
+        text-align: center;
+      }
+      .checkout-radio:checked:before,
+      .checkout-radio.checkout-checked:before,
+      .checkout-radio:checked:after,
+      .checkout-radio.checkout-checked:after,
+      .checked-radio:before,
+      .checked-radio:after {
+        content: '';
+        width: 0.5rem;
+        height: 0.3rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -0.25rem;
+        margin-top: -0.25rem;
+        background: transparent;
+        border: 1px solid #ffffff;
+        border-top: none;
+        border-right: none;
+        z-index: 2;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+      }
+      .cashier_payTypeTitle {
+        font-weight: 500;
+        padding: 1rem 0 1rem 1rem;
+      }
+      .cashier_footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 1rem;
+        cursor: pointer;
+      }
+      .cashier_payBtn {
+        width: 17.15rem;
+        height: 2.2rem;
+        background: rgb(133, 133, 133);
+        border-radius: 0.2rem;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 2.2rem;
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
+      }
+      .cashier_brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+      .cashier_brandImg {
+        height: 1rem;
+        margin-right: 0.2rem;
+        object-fit: contain;
+        max-width: 5rem;
+      }
+      .cashier_brandtxt {
+        font-size: 0.6rem;
+        color: rgba(0, 0, 0, 0.45);
+      }
+      /* 底部弹出样式 */
+      .dialogMask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .confirmDialog {
+        width: 15rem;
+        background: #ffffff;
+        border-radius: 0.2rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .confirmHeader {
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+        color: #22242e;
+        padding: 1.55rem 0.6rem 0;
+      }
+
+      .confimContent {
+        width: 100%;
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: #6c6e75;
+        padding: 0.55rem 1rem 1.55rem;
+        display: flex;
+        justify-content: center;
+        text-align: justify;
+      }
+
+      .contentTxt {
+        line-height: 1.05rem;
+      }
+
+      .confimFooter {
+        width: 100%;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #eeeeee;
+        position: relative;
+      }
+
+      /* .confimFooter::after {
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 1px;
+        background: #eeeeee;
+        left: 50%;
+        top: 0;
+      } */
+
+      .confimBtn {
+        height: 100%;
+        flex: 1;
+        color: #22242e;
+        text-align: center;
+        font-size: 0.7rem;
+        line-height: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .leaveBtn {
+        position: relative;
+      }
+
+      .leaveBtn::after {
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 1px;
+        background: #eeeeee;
+        right: 0;
+        top: 0;
+      }
+
+      .payBtn {
+        color: #5568d5;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .show {
+        display: block;
+      }
+      /* 取消支付 */
+      .cancelMask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      }
+
+      .cancelMask .confirmDialog {
+        width: 15rem;
+        background: #ffffff;
+        border-radius: 0.2rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .cancelMask .confirmHeader {
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+        color: #22242e;
+        padding: 1.55rem 0.6rem 0;
+      }
+
+      .cancelMask .confimContent {
+        width: 100%;
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: #6c6e75;
+        padding: 0.55rem 1rem 1.55rem;
+        display: flex;
+        justify-content: center;
+        text-align: justify;
+      }
+
+      .cancelMask .contentTxt {
+        line-height: 1.05rem;
+      }
+
+      .cancelMask .confimFooter {
+        width: 100%;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #eeeeee;
+        position: relative;
+      }
+
+      .cancelMask .confimFooter::after {
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 1px;
+        background: #eeeeee;
+        left: 50%;
+        top: 0;
+      }
+
+      .cancelMask .confimBtn {
+        height: 100%;
+        flex: 1;
+        color: #22242e;
+        text-align: center;
+        font-size: 0.7rem;
+        line-height: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cancelMask .payBtn {
+        color: #5568d5;
+      }
+      /* loading */
+      .loadingMask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        max-width: 18.75rem;
+        margin: 0 auto;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        border-radius: 0 0 0.2rem 0.2rem;
+      }
+      .loadingMask .content {
+        position: absolute;
+        width: 15rem;
+        background: #ffffff;
+        border-radius: 0.2rem;
+        box-shadow: 0px 12px 48px 16px rgba(0, 0, 0, 0.03), 0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+          0px 6px 16px -8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        flex-direction: column;
+        align-items: center;
+      }
+      .loadingMask .loadingImg {
+        width: 1.6rem;
+        height: 1.6rem;
+        margin-top: 2rem;
+        animation: 1.6s linear ratate infinite;
+      }
+      @keyframes ratate {
+        0% {
+          transform: rotate(0deg);
+        }
+        40% {
+          transform: rotate(144deg);
+        }
+        80% {
+          transform: rotate(288deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .loadingMask .loadingTxt {
+        font-size: 0.7rem;
+        color: #22242e;
+        margin-top: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      /* 底部弹出收银台 */
+      .cashier_mask_mb16 {
+        margin-bottom: 0.8rem;
+      }
+      .cashier_mask_headerTitle {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        position: relative;
+        text-align: center;
+        margin-top: 0.8rem;
+      }
+      .cashier_mask_cancel {
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.45);
+        position: absolute;
+        left: 0.8rem;
+      }
+      .cashier_mask_divider {
+        height: 1px;
+        background: #eeeeee;
+      }
+      .cashier_mask_logo {
+        margin-bottom: 0.75rem;
+        padding-top: 1.6rem;
+      }
+      .cashier_mask_logoImg {
+        object-fit: contain;
+        height: 1.2rem;
+        max-width: 10rem;
+      }
+      .cashier_mask_price {
+        color: rgba(0, 0, 0, 0.85);
+        margin-bottom: 1rem;
+      }
+      .cashier_mask_priceNumber {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-left: 0.2rem;
+      }
+      .cashier_mask_payTxt {
+        color: rgba(0, 0, 0, 0.65);
+        margin-right: 0.4rem;
+      }
+      .cashier_mask_time {
+        color: rgba(0, 0, 0, 0.65);
+        font-weight: 500;
+      }
+      .cashier_mask_order {
+        color: rgba(0, 0, 0, 0.65);
+        margin-bottom: 2rem;
+      }
+      .cashier_mask_orderTxt {
+        margin-right: 0.2rem;
+      }
+      .cashier_mask_payType {
+        text-align: left;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+      }
+      .cashier_mask_payTypeTitle {
+        font-weight: 500;
+        padding: 1rem 0 1rem 1rem;
+      }
+      .cashier_mask_payTxt {
+        margin: 0 1rem;
+      }
+      .cashier_mask_footer {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 1.2rem;
+        cursor: pointer;
+      }
+      .cashier_mask_payBtn {
+        width: 17.15rem;
+        height: 2.2rem;
+        background: #E41937;
+        border-radius: 0.2rem;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 2.2rem;
+      }
+      .cashier_mask_brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+      .cashier_mask_brandImg {
+        height: 1rem;
+        margin-right: 0.2rem;
+        object-fit: contain;
+      }
+      .cashier_mask_brandtxt {
+        font-size: 0.6rem;
+        color: rgba(0, 0, 0, 0.45);
+      }
+      .cashier_mask_content {
+        background: #ffffff;
+        border-radius: 0.4rem 0.4rem 0px 0px;
+        box-shadow: 0px 12px 48px 16px rgba(0, 0, 0, 0.03), 0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+          0px 6px 16px -8px rgba(0, 0, 0, 0.08);
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        z-index: 99;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .cashier_mask_mask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        max-width: 18.75rem;
+        margin: 0 auto;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        border-radius: 0 0 0.2rem 0.2rem;
+      }
+      /* page loading */
+      .pageLoadingMask {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        width: 18.75rem;
+        margin: 0 auto;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 99;
+      }
+      .pageLoadingImg {
+        width: 1.6rem;
+        height: 1.6rem;
+        position: absolute;
+        top: 30%;
+        left: 46.6%;
+        animation: 1.6s linear ratate infinite;
+        transform: translate(-50%, -50%);
+      }
+      .pageLoadingText {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: 38%;
+        transform: translateY(-50%);
+      }
+
+      /* 确认订单页面 */
+      .content {
+        margin-bottom: 129px;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+
+      .itemContent {
+        display: flex;
+        justify-content: center;
+      }
+
+      .actImg {
+        margin-top: 10px;
+      }
+
+      .address {
+        width: 100%;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .contact {
+        margin-top: 10px;
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #818489;
+        text-align: left;
+      }
+
+      .cashier_priceNumber-order {
+        font-size: 14px;
+        margin-left: 20px;
+      }
+
+      .dliver {
+        width: 100%;
+        height: 10px;
+        background-color: #ecf1f4;
+      }
+
+      .goodsTitle {
+        margin-left: 20px;
+        text-align: left;
+        font-size: 15px;
+        color: #595a5b;
+      }
+
+      .orderContent {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        margin-top: 15px;
+      }
+
+      .orderImg {
+        width: 85px;
+        height: 85px;
+        margin-left: 20px;
+      }
+
+      .orderLeft {
+        margin-left: 20px;
+        font-size: 13px;
+      }
+
+      .orderRight {
+        margin-right: 20px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .detail {
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        color: #818489;
+      }
+
+      .orderDetail {
+        display: flex;
+        flex-direction: column;
+        height: 85px;
+        margin-left: 15px;
+        margin-right: 15px;
+        justify-content: space-between;
+        text-align: left;
+      }
+
+      .pTitle {
+        text-align: left;
+        font-size: 14px;
+        color: #595a5b;
+      }
+
+      .colorType {
+        text-align: left;
+        font-size: 12px;
+        color: #818489;
+      }
+
+      .payView {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .payPrice {
+        font-size: 16px;
+        color: red;
+        text-align: left;
+      }
+
+      .stepper {
+        width: 100px;
+        border-radius: 3px;
+        background: white;
+        display: flex;
+        flex-direction: row;
+        height: 20px;
+      }
+
+      /*加号和减号*/
+      .stepper .sign {
+        width: 40px;
+        line-height: 20px;
+        text-align: center;
+        float: left;
+      }
+
+      /*数值*/
+      .stepper .number {
+        width: 45px;
+        height: 20px;
+        float: left;
+        background-color: #ecf1f4;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 15px;
+        color: #000000;
+      }
+
+      /*普通样式*/
+      .sign_normal {
+        color: black;
+        width: 30px;
+        line-height: 20px;
+        text-align: center;
+        float: left;
+      }
+
+      /*禁用样式*/
+      .sign_disabled {
+        color: #ccc;
+        width: 30px;
+        line-height: 20px;
+        text-align: center;
+        float: left;
+      }
+
+      .logo {
+        height: 100px;
+        width: 100px;
+        margin-top: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 25px;
+      }
+
+      .text-area {
+        display: flex;
+        justify-content: center;
+      }
+
+      .title {
+        font-size: 18px;
+        color: #8f8f94;
+      }
+
+      .btnView {
+        width: 80%;
+        margin-top: 30px;
+        height: 33px;
+        display: flex;
+        line-height: 33px;
+        color: #366092;
+        justify-content: center;
+        border: #1296db solid 1px;
+        border-radius: 10px;
+      }
+
+      .cashier_footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 5px;
+        background-color: #ffffff;
+      }
+
+      .cashier_payBtn-order {
+        width: 113px;
+        height: 44px;
+        background: rgb(133, 133, 133);
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 44px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .footerPay {
+        width: calc(100vw - 40px);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 44px;
+        margin-bottom: 20px;
+      }
+
+      .payPrice {
+        font-size: 12px;
+        color: red;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      /* 底部弹窗 */
+      .quickPayhalfScreen {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        max-width: 18.75rem;
+        margin: 0 auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        border-radius: 0 0 0.2rem 0.2rem;
+      }
+      .halfScreenModel {
+        width: 100%;
+        height: 230px;
+        background-color: white;
+        position: fixed;
+        bottom: 0px;
+      }
+      .halfScreenTitleView {
+        width: 100%;
+        line-height: 44px;
+        text-align: center;
+      }
+      .halfScreenCloseBtn {
+        position: absolute;
+        left: 0px;
+        width: 60px;
+        text-align: center;
+        color: rgba(29,33,41,0.4);
+        font-size: 14px;
+      }
+      .halfScreenTitleLabel {
+        color: rgba(29,33,41,1);
+        font-size: 18px;
+        font-weight: 500;
+      }
+      .halfScreenCell {
+        width: 100%;
+        height: 56px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+      }
+      .divid-line {
+        width: calc(100% - 32px);
+        margin-left: 16px;
+        height: 0.5px;
+        background-color: #E7E7E7;
+        position: absolute;
+        bottom: 0px;
+      }
+      .quickPayInput {
+        border: none;
+        color: rgba(29,33,41,0.8);
+        font-size: 16px;
+        font-weight: 400;
+        height: 100%;
+        width: calc(100% - 120px);
+      }
+      .quickPayInput:focus{
+        outline: none;
+      }
+      .quickPayInput::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+      .halfScreenSureBtn {
+        width: calc(100% - 32px);
+        line-height: 48px;
+        text-align: center;
+        color: white;
+        background-color: #0D6EFF;
+        margin-left: 16px;
+        border-radius: 2px;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="h5Container">
+      <!-- 全屏收银台 -->
+      <div id="fullScreenCashier" class="hide">
+        <div class="cashier_logo">
+          <img class="cashier_logoImg" src="../img/defaultLogo.png" alt="Logo" title="Logo" />
+        </div>
+        <div class="cashier_price">
+          <span>¥</span>
+          <span class="cashier_priceNumber" id="cashier_priceNumber">---</span>
+        </div>
+        <div class="cashier_payTimeRemaining">
+          <span class="cashier_payTxt">支付剩余时间</span>
+          <span class="cashier_time">
+            <span class="cashier_timeItem" id="pay_minute">05</span
+            ><span class="cashier_timeSplit">:</span
+            ><span class="cashier_timeItem" id="pay_second">00</span>
+          </span>
+        </div>
+        <div class="cashier_order">
+          <span class="cashier_orderTxt">订单编号:</span>
+          <span class="cashier_orderNumber" id="cashier_orderNumber">---</span>
+        </div>
+        <div class="cashier_cashierDivider"></div>
+        <div class="cashier_payType">
+          <div class="cashier_payTypeTitle">选择支付方式</div>
+          <ul class="checkout-list" id="fullUlItem">
+            <li class="checkout-list-item" id="alipayItem">
+              <div class="checkout-list-item-inner">
+                <img class="checkout-payIcon" src="../img/zfb_pay.png" />
+                <span class="checkout-pay-title">支付宝</span>
+                <span style="--theme: #0D6EFF" class="checkout-recommend">推荐</span>
+              </div>
+              <input
+                id="alipayInput"
+                style="--theme: #0D6EFF"
+                class="checkout-radio"
+                type="radio"
+                name="radio"
+              />
+            </li>
+            <li class="checkout-list-item" id="wxpayItem">
+              <div class="checkout-list-item-inner">
+                <img class="checkout-payIcon" src="../img/wx_pay.png" />
+                <span class="checkout-pay-title">微信</span>
+                <span style="--theme: #0D6EFF" class="checkout-recommend">推荐</span>
+              </div>
+              <input
+                id="wxpayInput"
+                style="--theme: #0D6EFF"
+                class="checkout-radio"
+                type="radio"
+                name="radio"
+              />
+            </li>
+            <li class="checkout-list-item" id="jdbtItem" data-type="JDBT">
+              <div class="checkout-list-item-inner">
+                <img class="checkout-payIcon" src="../img/jd_baitiao_pay.svg" />
+                <span class="checkout-pay-title">白条分期</span>
+                <span class="checkout-pay-tag">分期还更轻松</span>
+                <span style="--theme: #0D6EFF" class="checkout-recommend">推荐</span>
+              </div>
+              <input
+                id="jdbtInput"
+                style="--theme: #0D6EFF"
+                class="checkout-radio"
+                type="radio"
+                name="radio"
+              />
+              <div class="checkout-payinfo-item-box">
+                <div class="checkout-payinfo-item_wrap">
+                  <div class="checkout-payinfo-item checkout-payinfo-item-active">
+                    <div class="payInfoTitle">¥<span class="periodAmount"></span>*3期</div>
+                    <div class="payInfoDesc">手续费 ¥<span class="charge"></span>/期</div>
+                    <img
+                      class="selected-arrow-icon selected-arrow-icon-active"
+                      src="../img/selected-arrow-icon.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="checkout-payinfo-item">
+                    <div class="payInfoTitle">¥<span class="periodAmount"></span>*6期</div>
+                    <div class="payInfoDesc">手续费 ¥<span class="charge"></span>/期</div>
+                    <img
+                      class="selected-arrow-icon"
+                      src="../img/selected-arrow-icon.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="checkout-payinfo-item">
+                    <div class="payInfoTitle">¥<span class="periodAmount"></span>*12期</div>
+                    <div class="payInfoDesc">手续费 ¥<span class="charge"></span>/期</div>
+                    <img
+                      class="selected-arrow-icon"
+                      src="../img/selected-arrow-icon.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="cashier_footer">
+          <div class="cashier_payBtn" id="pay-button" style="background: #0D6EFF">
+            支付¥ <span id="pay_amount">793.21</span>
+          </div>
+          <div class="cashier_brand">
+            <img class="cashier_brandImg" src="../img/defaultLogo.png" alt="" />
+            <span class="cashier_brandtxt">提供技术支持</span>
+          </div>
+        </div>
+      </div>
+      <!-- 底部弹出收银台 -->
+      <div class="cashier_mask_mask hide" id="halfScreenCashier">
+        <div class="cashier_mask_content">
+          <div class="cashier_mask_headerTitle">
+            <span class="cashier_mask_cancel" id="cashierCancelBtn">取消</span>
+            <span>收银台 </span>
+          </div>
+          <div class="cashier_mask_logo">
+            <img
+              class="cashier_mask_logoImg"
+              src="../img/defaultBrandLogo.png"
+              alt="Logo"
+              title="Logo"
+            />
+          </div>
+          <div class="cashier_mask_price">
+            <span>¥</span>
+            <span class="cashier_mask_priceNumber" id="cashier_priceNumber1">793.21</span>
+          </div>
+          <div class="cashier_mask_divider"></div>
+          <div class="cashier_mask_payType">
+            <div class="cashier_mask_payTypeTitle">选择支付方式</div>
+            <ul class="checkout-list">
+              <li class="checkout-list-item" id="alipayItem1">
+                <div class="checkout-list-item-inner">
+                  <img class="checkout-payIcon" src="../img/zfb_pay.png" />
+                  <span class="checkout-pay-title">支付宝</span>
+                  <span style="--theme: #E41937" class="checkout-recommend">推荐</span>
+                </div>
+                <input
+                  id="alipayInput1"
+                  style="--theme: #E41937"
+                  class="checkout-radio"
+                  type="radio"
+                  name="radio"
+                />
+              </li>
+              <li class="checkout-list-item" id="wxpayItem1">
+                <div class="checkout-list-item-inner">
+                  <img class="checkout-payIcon" src="../img/wx_pay.png" />
+                  <span class="checkout-pay-title">微信</span>
+                  <span style="--theme: #E41937" class="checkout-recommend">推荐</span>
+                </div>
+                <input
+                  id="wxpayInput1"
+                  style="--theme: #E41937"
+                  class="checkout-radio"
+                  type="radio"
+                  name="radio"
+                />
+              </li>
+              <li class="checkout-list-item" id="quickpasspayItem1">
+                <div class="checkout-list-item-inner">
+                  <img class="checkout-payIcon" src="../img/quickpass_pay.png" />
+                  <span class="checkout-pay-title">银联支付</span>
+                  <span style="--theme: #E41937" class="checkout-recommend">推荐</span>
+                </div>
+                <input
+                  id="quickpasspayInput1"
+                  style="--theme: #E41937"
+                  class="checkout-radio"
+                  type="radio"
+                  name="radio"
+                />
+              </li>
+            </ul>
+          </div>
+          <div class="cashier_mask_footer">
+            <div
+              id="pay-button1"
+              class="cashier_mask_payBtn cashier_mask_mb16"
+              style="background-color: #E41937"
+            >
+              支付¥<span id="pay_amount1">793.21</span>
+            </div>
+            <div class="cashier_mask_brand">
+              <img class="cashier_mask_brandImg" src="../img/defaultLogo.png" alt="" />
+              <span class="cashier_mask_brandtxt">提供技术支持</span>
+            </div>
+          </div>
+        </div>
+      </div>
+       <!-- 确认订单页面 -->
+      <div class="content hide" id="orderPage">
+        <div class="address"><span style="margin-left: 20px;margin-right: 20px;">上海市嘉定区红宝石路915弄41号1002</span></div>
+        <div class="contact">
+          <span class="cashier_priceNumber-order">王*华</span>
+          <span class="cashier_priceNumber-order">177****8846</span>
+        </div>
+        <div class="dliver"></div>
+
+        <div class="orderContent">
+          <div class="goodsTitle">无线鼠标</div>
+        </div>
+        <div class="orderContent" style="margin-bottom: 15px;">
+          <img src="../img/mouse.png"
+            class="orderImg"></img>
+          <div class="orderDetail">
+            <div class="pTitle">无线鼠标静音无声笔记本台式电脑游戏</div>
+            <div class="colorType">银色</div>
+            <div class="payView">
+              <div class="payPrice">￥<span id="priceOrder">0.01</span></div>
+              <div class="stepper">
+                <!-- 减号 -->
+                <span class="sign_disabled" style="text-align:left" id="decreaseBtn">-</span>
+                <!-- 数值 -->
+                <span class="number" id="countOrder">1</span>
+                <!-- 加号 -->
+                <span class="sign_normal" style="text-align: right;" id="addBtn">+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dliver"></div>
+
+        <div class="orderContent">
+          <div class="orderLeft">商品金额</div>
+          <div class="orderRight">￥<span id="price2">0.01</span></div>
+        </div>
+        <div class="orderContent" style="margin-bottom: 15px;">
+          <div class="orderLeft">次日达(19:00前下单，预计明日24:00前送达)</div>
+          <div class="orderRight">¥<span  id="price3">0.01</span> </div>
+        </div>
+        <div class="dliver"></div>
+        <div class="detail">
+          <span style="font-size: 13px;margin-bottom: 14px;color: #000000;">买家须知</span>
+          <span style="margin-bottom: 14px;">鼠标出厂前会进行相关质量测试，产品底部脚垫的保护膜上会留下细微痕迹，首次拆封后，移除保护膜即可正常使用。</span>
+          <span style="margin-bottom: 14px;">适用于Windows 7/8/10、Mac OS X 10.8 或更高版本、Chrome OS 多种系统。</span>
+          <span style="margin-bottom: 14px;">内部实验室测算数据，电池使用寿命依用户及计算条件而异。</span>
+          <span>提交订单即表示同意买家须知。</span>
+
+        </div>
+        <div class="cashier_footer">
+          <div class="dliver"
+            style="text-align: center;height:45px ;font-size: 13px;color: #F5A478;align-items: center;display: flex;justify-content: center;margin-bottom: 15px;">
+            本页面只用于演示收银台支付，不发货、不退款
+          </div>
+          <div class="footerPay">
+            <div class="payPrice">
+              实付款：￥<div style="font-size: 18px;font-weight: 600;" id="price4">0.01</div>
+            </div>
+            <div id="cashierPayBtn" class="cashier_payBtn-order" style="background: #FEAD0B">立即购买</div>
+          </div>
+        </div>
+        <div class="actionSheetWrap" id="actionSheetWrap">
+          <div class="popup" id="popup">
+            <div class="contentItem" id="fullScreen">打开全屏收银台</div>
+            <div class="contentItem" id="halfScreen">弹出半屏收银台</div>
+            <div class="popupDivider"></div>
+            <div class="contentItem" id="cancelBtn">取消</div>
+          </div>
+        </div>
+      </div>
+      <!-- 超时提醒 -->
+      <div class="dialogMask hide" id="timeoutRemind">
+        <div class="confirmDialog">
+          <div class="confirmHeader">订单已取消</div>
+          <div class="confimContent">
+            <p class="contentTxt">交易超时已关闭，请重新下单支付。</p>
+          </div>
+          <div class="confimFooter">
+            <div id="continuePayBtn" class="confimBtn payBtn" style="color: #E41937">重新下单</div>
+          </div>
+        </div>
+      </div>
+      <!-- 取消支付 -->
+      <div class="cancelMask hide" id="cancelPay">
+        <div class="confirmDialog">
+          <div class="confirmHeader">确定离开收银台</div>
+          <div class="confimContent">
+            <p class="contentTxt">订单尚未完成支付，请尽快支付。</p>
+          </div>
+          <div class="confimFooter">
+            <div class="confimBtn" id="confirmLeaveBtn">确认离开</div>
+            <div id="continuePay" class="confimBtn payBtn" style="color: #E41937">继续支付</div>
+          </div>
+        </div>
+      </div>
+      <!-- loading -->
+      <div class="loadingMask hide" id="loadingMask">
+        <div class="content">
+          <img class="loadingImg" src="../img/loading.png" alt="" />
+          <div class="loadingTxt">处理中，请耐心等待</div>
+        </div>
+      </div>
+      <!-- 页面初始化loading -->
+      <div class="pageLoadingMask" id="pageLoadingMask">
+        <img class="pageLoadingImg" src="../img/loading.png" alt="" />
+        <div class="pageLoadingText">加载中</div>
+      </div>
+
+      <!-- 快捷支付弹框 -->
+      <div class="quickPayhalfScreen hide" id="quickPayModel">
+        <div class="halfScreenModel">
+          <div class="halfScreenTitleView">
+            <span class="halfScreenCloseBtn" id="quickPayModelCancel">取消</span>
+            <span class="halfScreenTitleLabel">快捷支付</span>
+          </div>
+          <div class="halfScreenCell">
+            <span style="margin-left: 16px;width: 82px;">手机号</span>
+            <input class="quickPayInput" id="quickPayInput" placeholder="请输入手机号" />
+            <div class="divid-line"></div>
+          </div>
+          <div id="quickPayBtn" class="halfScreenSureBtn">快捷支付</div>
+          <!-- <div class="halfScreenSureBtn">
+            <div id="quickPayBtn" class="confimBtn payBtn" style="color: #E41937">快捷支付</div>
+            <div id="quickBandCardBtn" class="confimBtn payBtn" style="color: #E41937">快捷绑卡</div>
+          </div> -->
+        </div>
+      </div>
+      <!-- 手机网页支付弹框 -->
+      <div class="quickPayhalfScreen hide" id="wapPayModel">
+        <div class="halfScreenModel">
+          <div class="halfScreenTitleView">
+            <span class="halfScreenCloseBtn" id="wapPayModelCancel">取消</span>
+            <span class="halfScreenTitleLabel">手机网页支付</span>
+          </div>
+          <div class="halfScreenCell">
+            <span style="margin-left: 16px;width: 82px;">银行卡号</span>
+            <input class="quickPayInput" id="wapPayInput" placeholder="请输入银行卡号" />
+            <div class="divid-line"></div>
+          </div>
+          <div id="wapPayBtn" class="halfScreenSureBtn">确认支付</div>
+          <!-- <div class="halfScreenSureBtn">
+            <div id="quickPayBtn" class="confimBtn payBtn" style="color: #E41937">快捷支付</div>
+            <div id="quickBandCardBtn" class="confimBtn payBtn" style="color: #E41937">快捷绑卡</div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/vconsole/vconsole-3.4.0.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/axios/axios-0.21.1.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/dayjs/dayjs-1.10.4.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/fastclick/fastclick-1.0.6.min.js"></script>
+<script src="https://track-sdk-cdn.cloudpnr.com/web-tracksdk/1.0.8/monitorjs.browser.entry.min.js"></script>
+<script src="../config/index.js"></script>
+<script src="./http.js"></script>
+<script src="./util.js"></script>
+<script>
+  // 埋点
+  HuifuMonitor.init({
+    pid: 'opps-checkout-web',
+    isDev: false,
+  });
+  HuifuMonitor.track(
+    '0090_00006404',
+    {
+      huifu_id: location.host.indexOf(configObj.productionEnvHost) > -1 ? configObj.prod.huifuId : configObj.test.huifuId,
+      os: 'h5',
+      page: 'full',
+    },
+    true
+  );
+  window.addEventListener('load', () => {
+    const state = { title: 'init', url: '#' };
+    window.history.pushState(state, 'init', '#');
+  });
+  window.addEventListener('popstate', () => {
+    $('#cancelPay').show();
+  });
+  function jumpLink(urlName) {
+    const origin = location.origin;
+    const pathname = location.pathname;
+    const urlAry = pathname.split('/');
+    urlAry.pop();
+    urlAry.push(urlName);
+    const urlStr = urlAry.join('/');
+    const link = origin + urlStr;
+    return link;
+  }
+  // let totalPrice = GetQueryString('price');
+  // $('#cashier_priceNumber').text(totalPrice);
+  // $('#pay_amount').text(totalPrice);
+  // $('#cashier_priceNumber1').text(totalPrice);
+  // $('#pay_amount1').text(totalPrice);
+
+  // 取消支付,返回商品确认页面，修复微信中无法返回上一页
+  $('#confirmLeaveBtn').click(function () {
+    location.replace(jumpLink('goodsDetail.html'));
+  });
+  
+  // var mer_ord_id = dayjs().format('YYYYMMDDHHmmssSSS') + '' + randomNum(100, 999);
+  // localStorage.setItem('mer_ord_id', mer_ord_id);
+  // $('#cashier_orderNumber').text(localStorage.getItem('mer_ord_id'));
+
+  $(function() {
+    $('#pay-button').css("background", isInWeiXinApp ? '#2BB915' : isInUnionApp ? '#EA4335' : "#0D6EFF");
+    $('.checkout-radio').attr('style', `--theme: ${isInWeiXinApp ? '#2BB915' : isInUnionApp ? '#EA4335' : "#0D6EFF"}`)
+  })
+</script>
+<script type="text/javascript" src="util/paySdk.min.js"></script>
+<script src="./pay.js"></script>

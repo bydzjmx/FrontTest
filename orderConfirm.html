@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>订单确认</title>
+</head>
+<style>
+  html,
+  body {
+    height: 100%;
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 129px;
+    display: none;
+  }
+
+  .itemContent {
+    display: flex;
+    justify-content: center;
+  }
+
+  .actImg {
+    margin-top: 10px;
+  }
+
+  .address {
+    width: 100%;
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .contact {
+    margin-top: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #818489;
+  }
+
+  .cashier_priceNumber {
+    font-size: 14px;
+    margin-left: 20px;
+  }
+
+  .dliver {
+    width: 100%;
+    height: 10px;
+    background-color: #F7F8FA;
+  }
+
+  .goodsTitle {
+    margin-left: 20px;
+    text-align: left;
+    font-size: 15px;
+    color: #595a5b;
+  }
+
+  .orderContent {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-top: 15px;
+  }
+
+  .orderImg {
+    width: 85px;
+    height: 85px;
+    margin-left: 20px;
+  }
+
+  .orderLeft {
+    margin-left: 20px;
+    font-size: 13px;
+  }
+
+  .orderRight {
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .detail {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 15px;
+    margin-bottom: 150px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    color: #818489;
+  }
+
+  .orderDetail {
+    width: 63.47vw;
+    max-width: 238px;
+    display: flex;
+    flex-direction: column;
+    height: 85px;
+    margin-left: 15px;
+    margin-right: 15px;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .pTitle {
+    text-align: left;
+    font-size: 14px;
+    color: #595a5b;
+  }
+
+  .colorType {
+    text-align: left;
+    font-size: 12px;
+    color: #818489;
+  }
+
+  .payView {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .stepper {
+    width: 100px;
+    border-radius: 3px;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+  }
+
+  /*加号和减号*/
+  .stepper .sign {
+    width: 40px;
+    line-height: 20px;
+    text-align: center;
+    float: left;
+  }
+
+  /*数值*/
+  .stepper .number {
+    padding: 0 6px;
+    height: 20px;
+    float: left;
+    background-color: #ecf1f4;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 15px;
+    color: #000000;
+  }
+
+  /*普通样式*/
+  .sign_normal {
+    color: black;
+    width: 30px;
+    line-height: 20px;
+    text-align: center;
+    float: left;
+  }
+
+  /*禁用样式*/
+  .sign_disabled {
+    color: #ccc;
+    width: 30px;
+    line-height: 20px;
+    text-align: center;
+    float: left;
+  }
+
+  .logo {
+    height: 100px;
+    width: 100px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+  }
+
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 18px;
+    color: #8f8f94;
+  }
+
+  .btnView {
+    width: 80%;
+    margin-top: 30px;
+    height: 33px;
+    display: flex;
+    line-height: 33px;
+    color: #366092;
+    justify-content: center;
+    border: #1296db solid 1px;
+    border-radius: 10px;
+  }
+
+  .cashier_footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 5px;
+    background-color: #FFFFFF;
+  }
+
+  .cashier_payBtn {
+    width: 113px;
+    height: 44px;
+    background: rgb(133, 133, 133);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 44px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .footerPay {
+    width: calc(100vw - 40px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    margin-bottom: 20px;
+  }
+
+  .payPrice {
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FF1E34;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .actionSheetWrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+  }
+
+  .popup {
+    position: fixed;
+    background-color: #ffffff;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: .4rem .4rem 0 0;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    overflow: hidden;
+    color: #323233;
+    z-index: 1000;
+    animation: up 0.5s ease;
+  }
+
+  @keyframes up {
+    from {
+      bottom: -200px;
+    }
+
+    to {
+      bottom: 0;
+    }
+  }
+
+  .contentItem {
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 14px;
+    background-color: #fff;
+    text-align: center;
+    color: #666;
+  }
+
+  .contentItem:nth-of-type(1) {
+    border-bottom: 1px solid #f7f8fa;
+  }
+
+  .popupDivider {
+    height: .4rem;
+    background-color: #f7f8fa;
+  }
+</style>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="./util.js"></script>
+
+<body>
+  <div class="content content1">
+    <div class="address"><span style="margin-left: 20px;margin-right: 20px;">上海市嘉定区红宝石路915弄41号1002</span></div>
+    <div class="contact">
+      <span class="cashier_priceNumber">王*华</span>
+      <span class="cashier_priceNumber">177****8846</span>
+    </div>
+    <div class="dliver"></div>
+
+    <div class="orderContent">
+      <div class="goodsTitle">无线鼠标</div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <img src="../img/mouse.png" class="orderImg"></img>
+      <div class="orderDetail">
+        <div class="pTitle">无线鼠标静音无声笔记本台式电脑游戏</div>
+        <div class="colorType">银色</div>
+        <div class="payView">
+          <div class="payPrice">￥<span class="totalPrice">1</span></div>
+          <div class="stepper">
+            <!-- 减号 -->
+            <span class="sign_disabled" id="decreaseBtn">-</span>
+            <!-- 数值 -->
+            <span class="number" id="count">1</span>
+            <!-- 加号 -->
+            <span class="sign_normal" id="addBtn">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dliver"></div>
+
+    <div class="orderContent">
+      <div class="orderLeft">商品金额</div>
+      <div class="orderRight">￥<span class="totalPrice">1</span></div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <div class="orderLeft">次日达(19:00前下单，预计明日24:00前送达)</div>
+      <div class="orderRight">¥<span class="totalPrice">1</span> </div>
+    </div>
+    <div class="dliver"></div>
+    <div class="detail">
+      <span style="font-size: 13px;margin-bottom: 14px;color: #000000;">买家须知</span>
+      <span style="margin-bottom: 14px;">鼠标出厂前会进行相关质量测试，产品底部脚垫的保护膜上会留下细微痕迹，首次拆封后，移除保护膜即可正常使用。</span>
+      <span style="margin-bottom: 14px;">适用于Windows 7/8/10、Mac OS X 10.8 或更高版本、Chrome OS 多种系统。</span>
+      <span style="margin-bottom: 14px;">内部实验室测算数据，电池使用寿命依用户及计算条件而异。</span>
+      <span>提交订单即表示同意买家须知。</span>
+
+    </div>
+    <div class="cashier_footer">
+      <div class="dliver"
+        style="text-align: center;height:45px ;font-size: 13px;color: #FCA163;align-items: center;display: flex;justify-content: center;margin-bottom: 15px;">
+        本页面只用于演示收银台支付，不发货、不退款
+      </div>
+      <div class="footerPay">
+        <div class="payPrice" style="display: flex; flex-direction: row;align-items: flex-end;">
+          实付款：
+          <span style="font-size: 14px; font-weight: Bold;">￥</span>
+          <span style="font-size: 20px; font-weight: Bold;margin-bottom: -2px;" class="totalPrice">1</span>
+        </div>
+        <div id="cashierPayBtn" class="cashier_payBtn" style="background: #0D6EFF">立即购买</div>
+      </div>
+    </div>
+    <div class="actionSheetWrap" id="actionSheetWrap">
+      <div class="popup" id="popup">
+        <div class="contentItem" id="fullScreen">打开全屏收银台</div>
+        <div class="contentItem" id="halfScreen">弹出半屏收银台</div>
+        <div class="popupDivider"></div>
+        <div class="contentItem" id="cancelBtn">取消</div>
+      </div>
+    </div>
+  </div>
+  <div class="content content2">
+    <div class="address"><span style="margin-left: 20px;margin-right: 20px;">上海市嘉定区红宝石路915弄41号1002</span></div>
+    <div class="contact">
+      <span class="cashier_priceNumber">王*华</span>
+      <span class="cashier_priceNumber">177****8846</span>
+    </div>
+    <div class="dliver"></div>
+
+    <div class="orderContent">
+      <div class="goodsTitle">马克杯</div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <img src="../img/cup.png" class="orderImg"></img>
+      <div class="orderDetail">
+        <div class="pTitle">马克杯</div>
+        <div class="colorType">彩色</div>
+        <div class="payView">
+          <div class="payPrice">￥<span class="totalPrice">1</span></div>
+          <div class="stepper">
+            <!-- 减号 -->
+            <span class="sign_disabled" id="decreaseBtn">-</span>
+            <!-- 数值 -->
+            <span class="number" id="count">1</span>
+            <!-- 加号 -->
+            <span class="sign_normal" id="addBtn">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dliver"></div>
+
+    <div class="orderContent">
+      <div class="orderLeft">商品金额</div>
+      <div class="orderRight">￥<span class="totalPrice">1</span></div>
+    </div>
+    <div class="orderContent" style="margin-bottom: 15px;">
+      <div class="orderLeft">次日达(19:00前下单，预计明日24:00前送达)</div>
+      <div class="orderRight">¥<span class="totalPrice">1</span> </div>
+    </div>
+    <div class="dliver"></div>
+    <div class="detail">
+      <span style="font-size: 13px;margin-bottom: 14px;color: #000000;">买家须知</span>
+      <span style="margin-bottom: 14px;">简约风、大容量、陶瓷</span>
+      <span style="margin-bottom: 14px;width: 89.33vw;"></span>
+      <span>提交订单即表示同意买家须知。</span>
+
+    </div>
+    <div class="cashier_footer">
+      <div class="dliver"
+        id="msgTip"
+        style="text-align: center;height:45px ;font-size: 13px;color: #FCA163;align-items: center;display: flex;justify-content: center;margin-bottom: 15px;">
+        本页面只用于演示收银台支付，不发货、不退款
+      </div>
+      <div class="footerPay">
+        <div class="payPrice" style="display: flex; flex-direction: row;align-items: flex-end;">
+          实付款：
+          <span style="font-size: 14px; font-weight: Bold;">￥</span>
+          <span style="font-size: 20px; font-weight: Bold;margin-bottom: -2px;" class="totalPrice">1</span>
+        </div>
+        <div id="cashierPayBtn" class="cashier_payBtn" style="background: #0D6EFF">立即购买</div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+<script src="https://cdn.cloudpnr.com/opps/libs/jquery/jquery-2.1.2.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/axios/axios-0.21.1.min.js"></script>
+<script src="https://cdn.cloudpnr.com/opps/libs/dayjs/dayjs-1.10.4.min.js"></script>
+<script src="../config/index.js"></script>
+<script src="../h5/http.js"></script>
+<script>
+  $(function () {
+    var goodsType = GetQueryString('goodsType');
+    var content1Ele = $('.content1');
+    var content2Ele = $('.content2');
+    var priceBaseNum = 2;
+
+    // 分期商品处理
+    if (goodsType === '2') {
+      content1Ele.remove();
+      content2Ele.css('display','flex');
+      priceBaseNum = 1000;
+      $('#msgTip').text('本页面仅用于演示分期支付，交易完成后T+1日自动退款');
+    } else {
+      // 其他情况处理
+      content2Ele.remove();
+      content1Ele.css('display','flex');
+      $('#msgTip').text('本页面只用于演示收银台支付，不发货、不退款');
+    }
+
+    // 预下单,
+    // 2：跳转到支付托管h5，3:跳转到h5页面的小程序下单
+    var type = GetQueryString('type')
+    if (type && (type === '2' || type === '3')) {
+      $('#cashierPayBtn').text('托管支付');
+    }
+    $('#cashierPayBtn').css("background", isInWeiXinApp ? '#2BB915' : isInUnionApp ? '#EA4335' : "#0D6EFF");
+    function delCount() {
+      var num = document.getElementById('count').innerText;
+      // 商品总数量-1
+      if (num > 1) {
+        num--;
+        document.getElementById('addBtn').className = 'sign_normal'
+      }
+      // 将数值与状态写回
+      document.getElementById('count').innerText = num;
+      if (num === 1) {
+        document.getElementById('decreaseBtn').className = 'sign_disabled'
+      }
+      setTotalPrice(num)
+    }
+
+    function addCount() {
+      var num = document.getElementById('count').innerText;
+      // 总数量-1
+      if (num < 1000) {
+        num++;
+        document.getElementById('decreaseBtn').className = 'sign_normal'
+      }
+      document.getElementById('count').innerText = num;
+      if (num === 1000) {
+        document.getElementById('addBtn').className = 'sign_disabled'
+      }
+      setTotalPrice(num)
+    }
+    function setTotalPrice(totalPrice) {
+      $('.totalPrice').each((ele, item) => {
+        item.textContent = Number((priceBaseNum * totalPrice) / 100).toFixed(2);
+      })
+    }
+    function toDecimal2(val) {
+      let floatVal = parseFloat(val);
+      if (isNaN(floatVal)) {
+        return false;
+      }
+      let s = val.toString();
+      let rs = val.indexOf('.');
+      if (rs < 0) {
+        rs = s.length;
+        s += '.';
+      }
+      while (s.length <= rs + 2) {
+        s += '0';
+      }
+      return s;
+    }
+    function gotoPay(pageShowType) {
+      var price = $('.totalPrice')[0].textContent
+      var toDecimal2Price = toDecimal2(price)
+      var origin = location.origin;
+      var pathname = location.pathname;
+      var urlAry = pathname.split('/');
+      urlAry.pop();
+      urlAry.push('cashier.html');
+      let urlStr = urlAry.join('/');
+      var url = origin + '' + urlStr + '?price=' + toDecimal2Price + '&pageShowType=' + pageShowType;
+      url = goodsType === '2' ? url + '&goodsType=2' : url;
+      location.href = url;
+    }
+    var totalPrice = GetQueryString('price') * 100 || '1';
+    setTotalPrice(totalPrice)
+    $('#count').text(totalPrice)
+    $('#addBtn').click(function () {
+      addCount()
+    })
+    $('#decreaseBtn').click(function () {
+      delCount()
+    })
+    $(document).click(function (e) {
+      // 20220920 去掉半屏支付
+      // gotoPay('fullScreen')
+      //   e.stopPropagation()
+      //   if(e.target !== document.getElementById('cashierPayBtn')){
+      //     $('#actionSheetWrap').hide()
+      //   }else{
+      //     $('#actionSheetWrap').show()
+      //   }
+    })
+    // 立即支付点击时间
+    $('#cashierPayBtn').click(function () {
+      var isProdEnv = location.host.indexOf(configObj.productionEnvHost) > -1 ? true : false;
+      var price = $('.totalPrice')[0].textContent;
+      var type = GetQueryString('type')
+      // 支付托管
+      if (type) {
+        // 跳转到支付托管h5
+        if (type === '2') {
+          var paymentcreateData = {
+            huifu_id: isProdEnv ? configObj.prod.huifuId : configObj.test.huifuId,
+            req_seq_id: new Date().getTime(),
+            hosting_order_id: '2023091400' + Math.floor(Math.random() * 900000 + 100000),
+            pre_order_type: '1',
+            trans_amt: toDecimal2(price),
+            time_expire: "300",
+            goods_desc: '无线鼠标静音无声笔记本台式电脑',
+            hosting_data: {
+              project_title: "DEMO演示-无模板",
+              project_id: "PROJECTID2023092518673961",
+              callback_url: location.href.split('/checkout')[0] + '/demo/h5/goodsDetail.html?type=2',
+
+            },
+          };
+          // 走预下单接口 返回字段 jump_url 直接跳转
+          service.post(configObj.preorder, paymentcreateData).then((res) => {
+            const { jump_url } = res.json_data;
+            if (jump_url) {
+              window.location.href = jump_url;
+            }
+          });
+        } else if (type === '3') {
+          // 跳转到h5页面的小程序下单
+          window.location.href = 'miniCashier.html?price=' + toDecimal2(price)
+        }
+      } else {
+        gotoPay('fullScreen')
+      }
+    })
+    $('#fullScreen').click(function () {
+      gotoPay('fullScreen')
+    })
+    $('#halfScreen').click(function () {
+      gotoPay('halfScreen')
+    })
+  })
+
+</script>
