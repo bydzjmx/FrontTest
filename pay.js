@@ -260,6 +260,8 @@ $(document).ready(function () {
           showToast(JSON.stringify(error) || '发生错误！');
         }
       }
+      // 页面加载完，隐藏页面loading
+      $('#pageLoadingMask').hide();
     } else if (isInUnionApp && !isJdbt) {
       if (pageShowType === 'fullScreen') {
         $('#fullScreenCashier').show();
@@ -283,7 +285,7 @@ $(document).ready(function () {
       } else {
         getUnionUserId(userAuthCode);
       }
-    // } else {
+    } else {
       loadPaySDK(aliPaySDKURL);
       if (pageShowType === 'fullScreen') {
         $('#fullScreenCashier').show();
