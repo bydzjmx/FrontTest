@@ -203,7 +203,7 @@ $(document).ready(function () {
   function payEnvHandle() {
     $('#quickPayItem').show();
     $('#wapPayItem').show();
-    if (isInWeiXinApp && !isJdbt) {
+    // if (isInWeiXinApp && !isJdbt) {
       loadPaySDK(wxPaySDKURL);
       // 收银页面展示类型
       if (pageShowType === 'fullScreen') {
@@ -260,7 +260,7 @@ $(document).ready(function () {
           showToast(JSON.stringify(error) || '发生错误！');
         }
       }
-    } else if (isInUnionApp && !isJdbt) {
+    // } else if (isInUnionApp && !isJdbt) {
       if (pageShowType === 'fullScreen') {
         $('#fullScreenCashier').show();
         $('#quickpasspayItem').show();
@@ -283,7 +283,7 @@ $(document).ready(function () {
       } else {
         getUnionUserId(userAuthCode);
       }
-    } else {
+    // } else {
       loadPaySDK(aliPaySDKURL);
       if (pageShowType === 'fullScreen') {
         $('#fullScreenCashier').show();
@@ -313,7 +313,7 @@ $(document).ready(function () {
       // 页面加载完，隐藏页面loading
       $('#pageLoadingMask').hide();
     }
-  }
+  // }
 
   // 选择支付方式
   function choosePayment(type) {}
